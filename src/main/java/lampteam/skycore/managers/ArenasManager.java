@@ -50,7 +50,11 @@ public class ArenasManager {
 
     public static void stopEverything(){
         for (Arena arena : arenas){
-            arena.
+            arena.forceStop();
         }
+    }
+
+    public static List<Arena> getArenas(){
+        return arenas;
     }
 }

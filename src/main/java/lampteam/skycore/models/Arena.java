@@ -29,8 +29,6 @@ public class Arena {
     private final List<PlayerModel> spectators = new ArrayList<>();
     private final List<PlayerModel> players = new ArrayList<>();
 
-    private final HashMap<PlayerModel, Integer> playersAliveTime = new HashMap<PlayerModel, Integer>();
-
     public boolean isGameActive(){
         return gameActive;
     }
@@ -47,7 +45,7 @@ public class Arena {
         gameActive = true;
 
         for (PlayerModel model : players){
-            playersAliveTime.put(model, 0);
+            model.resetAliveTime();
         }
 
         BukkitRunnable mainTimer = new BukkitRunnable() {
@@ -64,7 +62,7 @@ public class Arena {
                 setTimerDisplay(time);
 
                 for (PlayerModel model : players){
-                    playersAliveTime.put(model, playersAliveTime.get(model)+1);
+                    model.incrementAliveTime(1);
                 }
             }
         };
@@ -76,7 +74,6 @@ public class Arena {
     }
 
     private void endGame(){
-        playersAliveTime.clear();
         players.clear();
         spectators.clear();
         members.clear();
@@ -155,7 +152,7 @@ public class Arena {
     public void playerDied(PlayerModel model){
         Player player = model.getPlayer();
         player.sendMessage(Component.text("Вы умерли!").color(NamedTextColor.RED));
-        player.sendMessage(Component.text("Время жизни: " + Utils.convertSecondsToMinutesAndSeconds(playersAliveTime.get(model))).color(NamedTextColor.WHITE));
+        player.sendMessage(Component.text("Время жизни: " + Utils.convertSecondsToMinutesAndSeconds(model.getAliveTime())).color(NamedTextColor.WHITE));
 
         players.remove(model);
         joinAsSpectator(model);

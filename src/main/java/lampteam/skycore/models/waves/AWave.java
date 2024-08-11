@@ -1,6 +1,6 @@
 package lampteam.skycore.models.waves;
 
-public class AWave {
+public abstract class AWave {
 
     protected double weight;
     protected String name;

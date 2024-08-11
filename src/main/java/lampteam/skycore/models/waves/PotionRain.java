@@ -1,5 +1,7 @@
 package lampteam.skycore.models.waves;
 
+import lampteam.skycore.models.Arena;
+
 public class PotionRain extends AWave implements IWave {
 
 
@@ -10,7 +12,7 @@ public class PotionRain extends AWave implements IWave {
     }
 
     @Override
-    public void startWave() {
+    public void startWave(Arena arena) {
 
     }
 }

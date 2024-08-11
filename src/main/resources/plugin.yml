@@ -1,0 +1,7 @@
+name: Skycore
+version: '${project.version}'
+main: lampteam.skycore.Skycore
+api-version: 1.20
+authors: [ Steyn91, _Siegward_, Haze91 ]
+
+depend: [PlaceholderAPI, CommandAPI]

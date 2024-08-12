@@ -5,6 +5,7 @@ import lampteam.skycore.listeners.EntityRelatedEvents;
 import lampteam.skycore.listeners.PlayerRelatedEvents;
 import lampteam.skycore.managers.ArenasManager;
 import lampteam.skycore.managers.ConfigsManager;
+import lampteam.skycore.managers.MenusManager;
 import lampteam.skycore.managers.PlaceholdersManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +30,7 @@ public final class Skycore extends JavaPlugin {
 
         ConfigsManager.loadArenasConfigs();
         ArenasManager.loadArenasFromConfig();
+        MenusManager.init();
 
 
     }

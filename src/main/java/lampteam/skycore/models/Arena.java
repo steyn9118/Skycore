@@ -25,6 +25,10 @@ public class Arena {
     private final Skycore plugin = Skycore.getPlugin();
     private final BossBar timerBar = BossBar.bossBar(Component.text("00:00"), 0f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_20);
 
+    public List<PlayerModel> getMembers() {
+        return members;
+    }
+
     private final List<PlayerModel> members = new ArrayList<>();
     private final List<PlayerModel> spectators = new ArrayList<>();
     private final List<PlayerModel> players = new ArrayList<>();

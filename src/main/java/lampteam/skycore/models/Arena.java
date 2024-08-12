@@ -6,8 +6,10 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BoundingBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,13 +17,15 @@ import java.util.List;
 
 public class Arena {
     private final int id;
+    private boolean gameActive = false;
+    private int wavesInterval = 120; // Секунды
 
+    private World world;
     private Location lobbyLocation;
     private HashMap<Location, PlayerModel> playerSpawnLocations;
     private Location spectatorsSpawnPoint;
+    private BoundingBox borders;
 
-    private boolean gameActive = false;
-    private int wavesInterval = 120; // Секунды
     private final Skycore plugin = Skycore.getPlugin();
     private final BossBar timerBar = BossBar.bossBar(Component.text("00:00"), 0f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_20);
 
@@ -33,11 +37,21 @@ public class Arena {
     private final List<PlayerModel> spectators = new ArrayList<>();
     private final List<PlayerModel> players = new ArrayList<>();
 
+    //геттеры
+    public int getId(){
+        return id;
+    }
     public boolean isGameActive(){
         return gameActive;
     }
-    public int getId(){
-        return id;
+    public int getWavesInterval(){
+        return wavesInterval;
+    }
+    public BoundingBox getBorders(){
+        return borders;
+    }
+    public World getWorld(){
+        return world;
     }
 
     public Arena(int id, int wavesInterval){

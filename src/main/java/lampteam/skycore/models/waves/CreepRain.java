@@ -2,7 +2,6 @@ package lampteam.skycore.models.waves;
 
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Creeper;
@@ -13,7 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
-public class CreepRain extends AWave implements IWave {
+public class CreepRain extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
     private static int totalCount;

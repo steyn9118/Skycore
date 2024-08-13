@@ -6,19 +6,16 @@ import lampteam.skycore.models.PlayerModel;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
-public class PotionRain extends AWave implements IWave {
+public class PotionRain extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
     private static int totalCount;

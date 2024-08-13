@@ -4,7 +4,7 @@ import lampteam.skycore.models.Arena;
 
 public interface IWave {
 
-    public double getWeight();
-    public void startWave(Arena arena);
+    double getWeight();
+    void startWave(Arena arena);
 
 }

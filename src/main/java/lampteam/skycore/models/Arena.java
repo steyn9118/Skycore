@@ -54,6 +54,10 @@ public class Arena {
         return world;
     }
 
+    public List<PlayerModel> getPlayers(){
+        return players;
+    }
+
     public Arena(int id, int wavesInterval){
         this.id = id;
         this.wavesInterval = wavesInterval;

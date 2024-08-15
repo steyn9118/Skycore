@@ -8,6 +8,7 @@ import lampteam.skycore.models.waves.PotionRain;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -44,8 +45,6 @@ public class Arena {
 
     private BukkitRunnable waveTimer;
     private BukkitRunnable mainTimer;
-
-    private final HashMap<PlayerModel, Location> spectatorsSafeLocations = new HashMap<>();
 
     //геттеры
     public int getId(){
@@ -103,10 +102,13 @@ public class Arena {
         gameActive = true;
 
         mainTimer = new BukkitRunnable() {
+
             int time = 0;
 
             @Override
             public void run() {
+                if (players.isEmpty()) endGame();
+
                 time++;
 
                 setTimerDisplay(time);
@@ -118,9 +120,9 @@ public class Arena {
                 for (PlayerModel model : spectators){
                     Player player = model.getPlayer();
                     if (borders.contains(player.getLocation().toVector())){
-                        spectatorsSafeLocations.put(model, player.getLocation());
+                        model.setLastSafeLocation(player.getLocation());
                     } else {
-                        Location safeLocation = spectatorsSafeLocations.get(model);
+                        Location safeLocation = model.getLastSafeLocation();
                         if (safeLocation != null) player.teleport(safeLocation);
                         else player.teleport(spectatorsSpawnPoint);
                     }
@@ -138,10 +140,9 @@ public class Arena {
         waveTimer.runTaskTimer(plugin, wavesInterval * 20L, wavesInterval * 20L);
 
 
-
         int spawnCount = 0;
         for (PlayerModel model : players){
-            model.resetAliveTime();
+            model.getPlayer().setGameMode(GameMode.SURVIVAL);
 
             model.getPlayer().teleport(playerSpawnLocations.get(spawnCount));
             spawnCount++;
@@ -160,7 +161,6 @@ public class Arena {
         spectators.clear();
         members.clear();
 
-        spectatorsSafeLocations.clear();
 
         // TODO ресет карты
 
@@ -168,7 +168,24 @@ public class Arena {
     }
 
     public void forceStop(){
+        // всё то же что и в tryLeavePlayer но без удаления из списков
+        for (PlayerModel model : members){
+            Player player = model.getPlayer();
 
+            if (players.contains(model)){
+                players.remove(model);
+            }
+            else {
+                spectators.remove(model);
+            }
+
+            clearPlayer(model);
+
+            player.teleport(hubLocation);
+            player.sendMessage(Component.text("Игра была остановлена"));
+        }
+
+        endGame();
     }
 
     private void startNewWave(){
@@ -197,6 +214,7 @@ public class Arena {
         spectators.add(model);
         Player player = model.getPlayer();
         player.teleport(spectatorsSpawnPoint);
+        player.setGameMode(GameMode.SPECTATOR);
         player.sendMessage(Component.text("Вы присоединились к арене как игрок"));
     }
 
@@ -212,30 +230,49 @@ public class Arena {
         Player player = model.getPlayer();
 
         if (players.contains(model)){
-            // Для игроков
-
             players.remove(model);
         }
         else {
-            // Для наблюдателей
-
             spectators.remove(model);
         }
+
         members.remove(model);
+        clearPlayer(model);
 
         player.teleport(hubLocation);
+        player.sendMessage(Component.text("Вы покинули арену"));
     }
 
     public void playerDied(PlayerModel model){
         Player player = model.getPlayer();
         player.sendMessage(Component.text("Вы умерли!").color(NamedTextColor.RED));
         player.sendMessage(Component.text("Время жизни: " + Utils.convertSecondsToMinutesAndSeconds(model.getAliveTime())).color(NamedTextColor.WHITE));
+        player.sendMessage(Component.text("Пережито волн: " + model.getWavesSurvived()));
+        if (players.size() != 1) player.sendMessage(Component.text("Осталось игроков: " + (players.size() - 1)));
 
         players.remove(model);
         joinAsSpectator(model);
     }
 
+    public void spectatePlayer(PlayerModel model, LinearDirection direction){
+        int spectateOnID = model.getLastViewedPlayerID() + direction.getValue();
+        if (spectateOnID >= players.size()) spectateOnID = 0;
+        if (spectateOnID < 0) spectateOnID = players.size() - 1;
+        model.setLastViewedPlayerID(spectateOnID);
 
+        Player player = model.getPlayer();
+        Player spectatedPlayer = players.get(spectateOnID).getPlayer();
+        player.teleport(spectatedPlayer.getLocation());
+        player.sendActionBar(Component.text("Сейчас наблюдаете за игроком: " + spectatedPlayer.getName()).color(NamedTextColor.YELLOW));
+    }
 
+    private void clearPlayer(PlayerModel model){
+        Player player = model.getPlayer();
+        player.setGameMode(GameMode.ADVENTURE);
+        player.getInventory().clear();
+        player.getActivePotionEffects().clear();
+
+        model.resetData();
+    }
 
 }

@@ -74,7 +74,7 @@ public class PlayerRelatedEvents implements Listener {
     }
 
     @EventHandler
-    public void onSpectatorDropItem(InventoryClickEvent event) {
+    public void onSpectatorClickItem(InventoryClickEvent event) {
         PlayerModel spectator = PlayerModelsManager.getModelOfPlayer((Player) event.getWhoClicked());
         if (!spectator.getCurrentArena().getSpectators().contains(spectator)) {
             return;

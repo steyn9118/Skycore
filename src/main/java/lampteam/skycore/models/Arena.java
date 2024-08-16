@@ -7,6 +7,7 @@ import lampteam.skycore.models.waves.CreepRain;
 import lampteam.skycore.models.waves.PotionRain;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.LinearComponents;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -32,6 +33,7 @@ public class Arena {
     private final Location lobbyLocation;
     private final List<Location> playerSpawnLocations;
     private final Location spectatorsSpawnPoint;
+    private final Location centerCore;
     private final BoundingBox borders;
     private final Location hubLocation;
 
@@ -64,6 +66,9 @@ public class Arena {
     public List<PlayerModel> getMembers() {
         return members;
     }
+    public Location getCenterCore(){
+        return centerCore;
+    }
     public BoundingBox getBorders(){
         return borders;
     }
@@ -83,6 +88,7 @@ public class Arena {
             Location lobbyLocation,
             Location spectatorsSpawnPoint,
             List<Location> playerSpawnLocations,
+            Location centerCore,
             BoundingBox borders,
             Location hubLocation
 
@@ -96,6 +102,7 @@ public class Arena {
         this.lobbyLocation = lobbyLocation;
         this.spectatorsSpawnPoint = spectatorsSpawnPoint;
         this.playerSpawnLocations = playerSpawnLocations;
+        this.centerCore = centerCore;
         this.borders = borders;
         this.hubLocation = hubLocation;
 

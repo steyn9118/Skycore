@@ -39,8 +39,9 @@ public class ArenasManager {
             Location spectatorsSpawnPoint = config.getOrSetDefault("spectatorsSpawnPoint", new Location(world, 0,0,0));
             List<Location> playerSpawnLocations = config.getOrSetDefault("playerSpawnLocations", new ArrayList<>());
 
+            Location centerCore = config.getOrSetDefault("centerCore", new Location(world, 0,0,0));
             Location corner1 = config.getOrSetDefault("corner1", new Location(world, 0, 0, 0));
-            Location corner2 = config.getOrSetDefault("corner1", new Location(world, 0, 0, 0));
+            Location corner2 = config.getOrSetDefault("corner2", new Location(world, 0, 0, 0));
             BoundingBox borders = new BoundingBox(corner1.x(), corner1.y(), corner1.z(), corner2.x(), corner2.y(), corner2.z());
 
             Location hubLocation = config.getOrSetDefault("hubLocation", new Location(world, 0,0,0));
@@ -53,6 +54,7 @@ public class ArenasManager {
                     lobbyLocation,
                     spectatorsSpawnPoint,
                     playerSpawnLocations,
+                    centerCore,
                     borders,
                     hubLocation));
         }

@@ -10,8 +10,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
@@ -47,6 +49,9 @@ public class Arena {
     private BukkitRunnable mainTimer;
 
     //геттеры
+    public List<PlayerModel> getSpectators() {
+        return spectators;
+    }
     public int getId(){
         return id;
     }
@@ -216,6 +221,9 @@ public class Arena {
         player.teleport(spectatorsSpawnPoint);
         player.setGameMode(GameMode.SPECTATOR);
         player.sendMessage(Component.text("Вы присоединились к арене как игрок"));
+        player.getInventory().setItem(0, new ItemStack(Material.RED_BANNER));
+        player.getInventory().setItem(4, new ItemStack(Material.IRON_DOOR));
+        player.getInventory().setItem(8, new ItemStack(Material.GREEN_BANNER));
     }
 
     private void joinAsPlayer(PlayerModel model){
@@ -274,5 +282,6 @@ public class Arena {
 
         model.resetData();
     }
+
 
 }

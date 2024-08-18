@@ -23,6 +23,8 @@ public class PotionRain extends AWave {
     private static double areaSize;//Def: 3
     private static int areaDuration;//Def: 5*20
 
+    private BukkitRunnable wave;
+
     public static void loadProperties(
             int totalCount1,
             int maxSpreadRadius1,
@@ -36,15 +38,10 @@ public class PotionRain extends AWave {
     }
 
     @Override
-    public double getWeight() {
-        return weight;
-    }
-
-    @Override
     public void startWave(Arena arena) {
         Random random = new Random();
 
-        BukkitRunnable wave = new BukkitRunnable() {
+        wave = new BukkitRunnable() {
             double x;
             double z;
             @Override
@@ -90,5 +87,10 @@ public class PotionRain extends AWave {
             }
         };
         wave.runTaskTimer(plugin, 0, 20/(totalCount/arena.getWavesInterval()));
+    }
+
+    @Override
+    public void stopWave() {
+        wave.cancel();
     }
 }

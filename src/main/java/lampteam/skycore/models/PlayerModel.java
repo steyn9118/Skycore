@@ -2,9 +2,7 @@ package lampteam.skycore.models;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
 
 public class PlayerModel {
 
@@ -51,10 +49,6 @@ public class PlayerModel {
         aliveTime += increment;
     }
 
-    public void resetAliveTime(){
-        aliveTime = -1;
-    }
-
     public PlayerModel(Player player){
         this.player = player;
     }
@@ -72,5 +66,6 @@ public class PlayerModel {
         lastSafeLocation = null;
         lastViewedPlayerID = -1;
         wavesSurvived = 0;
+        aliveTime = -1;
     }
 }

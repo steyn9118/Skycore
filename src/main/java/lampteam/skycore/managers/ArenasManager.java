@@ -45,6 +45,8 @@ public class ArenasManager {
             BoundingBox borders = new BoundingBox(corner1.x(), corner1.y(), corner1.z(), corner2.x(), corner2.y(), corner2.z());
 
             Location hubLocation = config.getOrSetDefault("hubLocation", new Location(world, 0,0,0));
+            int minPlayers = config.getOrSetDefault("minPlayers", 2);
+            int lobbyTime = config.getOrSetDefault("lobbyTimerDuration", 60);
 
             arenas.add(new Arena(
                     id,
@@ -56,7 +58,9 @@ public class ArenasManager {
                     playerSpawnLocations,
                     centerCore,
                     borders,
-                    hubLocation));
+                    hubLocation,
+                    lobbyTime,
+                    minPlayers));
         }
     }
 
@@ -75,7 +79,7 @@ public class ArenasManager {
         arena.tryLeavePlayer(playerModel);
     }
 
-    private static Arena getArenaByID(int id){
+    public static Arena getArenaByID(int id){
         for (Arena arena : arenas){
             if (arena.getId() == id) return arena;
         }
@@ -90,5 +94,13 @@ public class ArenasManager {
 
     public static List<Arena> getArenas(){
         return arenas;
+    }
+
+    public static List<String> getAllIDs(){
+        List<String> ids = new ArrayList<>();
+        for (Arena arena : arenas){
+            ids.add(String.valueOf(arena.getId()));
+        }
+        return ids;
     }
 }

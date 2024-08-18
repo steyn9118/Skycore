@@ -4,20 +4,15 @@ import lampteam.skycore.Skycore;
 import lampteam.skycore.managers.PlayerModelsManager;
 import lampteam.skycore.models.Arena;
 import lampteam.skycore.models.PlayerModel;
-import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 
 public class Worms extends AWave{
@@ -26,16 +21,14 @@ public class Worms extends AWave{
     private static double speed; //Def: 1(blocks per tick)
     private static int edgeCubeLength;//Def: 9
 
+    private BukkitRunnable wave;
+
     public static void loadProperties(
             double speed1,
             int edgeCubeLength1
     ){
         speed = speed1;
         edgeCubeLength = edgeCubeLength1;
-    }
-    @Override
-    public double getWeight() {
-        return weight;
     }
 
     @Override
@@ -53,7 +46,7 @@ public class Worms extends AWave{
             wormsList.put(sheep,playerModel.getPlayer());
         }
 
-        BukkitRunnable worms = new BukkitRunnable() {
+        wave = new BukkitRunnable() {
             int timer = 0;
             @Override
             public void run() {
@@ -108,6 +101,11 @@ public class Worms extends AWave{
                 timer++;
             }
         };
-        worms.runTaskTimer(plugin,0,1);
+        wave.runTaskTimer(plugin,0,1);
+    }
+
+    @Override
+    public void stopWave(){
+        wave.cancel();
     }
 }

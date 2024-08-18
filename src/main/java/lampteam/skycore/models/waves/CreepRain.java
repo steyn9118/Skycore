@@ -20,6 +20,8 @@ public class CreepRain extends AWave {
     private static double mobSpeed;//Def: 0.3
     private static int mobFuse;//Def: 30
 
+    private BukkitRunnable wave;
+
     public static void loadProperties(
         int totalCount1,
         int potionEffectDuration1,
@@ -33,15 +35,10 @@ public class CreepRain extends AWave {
     }
 
     @Override
-    public double getWeight() {
-        return weight;
-    }
-
-    @Override
     public void startWave(Arena arena) {
         Random random = new Random();
 
-        BukkitRunnable wave = new BukkitRunnable() {
+        wave = new BukkitRunnable() {
             int x;
             int z;
             boolean onlyAir;
@@ -69,5 +66,10 @@ public class CreepRain extends AWave {
         };
         wave.runTaskTimer(plugin, 0,20/(totalCount/arena.getWavesInterval()));
 
+    }
+
+    @Override
+    public void stopWave() {
+        wave.cancel();
     }
 }

@@ -15,10 +15,10 @@ import java.util.Random;
 public class CreepRain extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
-    private static int totalCount;
-    private static int potionEffectDuration;
-    private static double mobSpeed;
-    private static int mobFuse;
+    private static int totalCount;//Def: 240
+    private static int potionEffectDuration;//Def: 60
+    private static double mobSpeed;//Def: 0.3
+    private static int mobFuse;//Def: 30
 
     public static void loadProperties(
         int totalCount1,

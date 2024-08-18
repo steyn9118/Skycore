@@ -1,6 +1,7 @@
 package lampteam.skycore.models.waves;
 
 import lampteam.skycore.Skycore;
+import lampteam.skycore.managers.PlayerModelsManager;
 import lampteam.skycore.models.Arena;
 import lampteam.skycore.models.PlayerModel;
 import org.bukkit.Bukkit;
@@ -13,15 +14,17 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class Worms extends AWave{
     Skycore plugin = Skycore.getPlugin();
 
-    private static double speed; //blocks per tick
-    private static int edgeCubeLength;
+    private static double speed; //Def: 1(blocks per tick)
+    private static int edgeCubeLength;//Def: 9
 
     public static void loadProperties(
             double speed1,
@@ -38,7 +41,7 @@ public class Worms extends AWave{
     @Override
     public void startWave(Arena arena) {
 
-        HashMap<Player, Sheep> wormsList = new HashMap<>();
+        Hashtable<Sheep, Player> wormsList = new Hashtable<>();
         for (PlayerModel playerModel : arena.getPlayers()){
             Sheep sheep = (Sheep) arena.getWorld().spawnEntity(arena.getCenterCore(), EntityType.SHEEP);
             sheep.setGravity(false);
@@ -47,26 +50,58 @@ public class Worms extends AWave{
             sheep.setAI(false);
             sheep.setColor(DyeColor.BLACK);
             sheep.setCollidable(false);
-            wormsList.put(playerModel.getPlayer(), sheep);
+            wormsList.put(sheep,playerModel.getPlayer());
         }
 
         BukkitRunnable worms = new BukkitRunnable() {
             int timer = 0;
             @Override
             public void run() {
-                for (PlayerModel playerModel : arena.getPlayers()){
-                    Sheep sheep = wormsList.get(playerModel.getPlayer());
+                for (Sheep sheep : wormsList.keySet()){
+                    Player player = wormsList.get(sheep);
                     Location sheepLocation = sheep.getLocation().clone();
 
+                    if (!arena.getPlayers().contains(PlayerModelsManager.getModelOfPlayer(player))){
+                        sheep.eject();
+                        //можно ли изменять хешмапу во время итерации?
+                        wormsList.remove(sheep, player);
+                        continue;
+                    }
+
+                    if (sheep.isSheared()){
+                        sheep.eject();
+                        wormsList.remove(sheep, player);
+                        //я не знаю как по другому сетать много блоков
+                        int halfLenght = (edgeCubeLength-1)/2;
+                        for (int x = -halfLenght; x < halfLenght; x++){
+                            for (int z = -halfLenght; z < halfLenght; z++){
+                                sheepLocation.clone().add(x, -halfLenght, z).getBlock().setType(Material.OBSIDIAN);
+                                sheepLocation.clone().add(x, halfLenght, z).getBlock().setType(Material.OBSIDIAN);
+                            }
+                        }
+                        for (int x = -halfLenght; x < halfLenght; x++){
+                            for (int y = -halfLenght; y < halfLenght; y++){
+                                sheepLocation.clone().add(x, y, halfLenght).getBlock().setType(Material.OBSIDIAN);
+                                sheepLocation.clone().add(x, y, -halfLenght).getBlock().setType(Material.OBSIDIAN);
+                            }
+                        }
+                        for (int y = -halfLenght; y < halfLenght; y++){
+                            for (int z = -halfLenght; z < halfLenght; z++){
+                                sheepLocation.clone().add(halfLenght, y, z).getBlock().setType(Material.OBSIDIAN);
+                                sheepLocation.clone().add(-halfLenght, y, z).getBlock().setType(Material.OBSIDIAN);
+                            }
+                        }
+                    }
+
                     //поворот
-                    Location playerLocation = playerModel.getPlayer().getEyeLocation().clone();
+                    Location playerLocation = player.getEyeLocation().clone();
                     sheep.getLocation().setDirection(new Vector(playerLocation.getX() - sheepLocation.getX(), playerLocation.getY() - sheepLocation.getY(), playerLocation.getZ() - sheepLocation.getZ()).normalize());
 
                     //движение вперед
                     Vector step = sheep.getLocation().getDirection().clone();
                     sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
 
-                    if (timer % 5 == 0 && !sheepLocation.getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){
+                    if (timer % 10 == 0 && !sheepLocation.getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){
                         sheep.getLocation().getBlock().setType(Material.OBSIDIAN);
                     }
                 }

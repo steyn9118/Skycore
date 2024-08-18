@@ -18,10 +18,10 @@ import java.util.Random;
 public class PotionRain extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
-    private static int totalCount;
-    private static int maxSpreadRadius;
-    private static double areaSize;
-    private static int areaDuration;
+    private static int totalCount;//Def: 120
+    private static int maxSpreadRadius;//Def: 8
+    private static double areaSize;//Def: 3
+    private static int areaDuration;//Def: 5*20
 
     public static void loadProperties(
             int totalCount1,

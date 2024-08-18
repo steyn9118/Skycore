@@ -33,11 +33,14 @@ public final class Skycore extends JavaPlugin {
         ConfigsManager.loadArenasConfigs();
         ArenasManager.loadArenasFromConfig();
 
+        CommandsManager.init();
         MenusManager.init();
 
     }
 
     public static void reloadPlugin(){
+        ArenasManager.stopEverything();
+
         ConfigsManager.savePluginConfig();
 
         ConfigsManager.loadPluginConfig();

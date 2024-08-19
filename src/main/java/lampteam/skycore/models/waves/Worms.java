@@ -18,7 +18,7 @@ import java.util.Hashtable;
 public class Worms extends AWave{
     Skycore plugin = Skycore.getPlugin();
 
-    private static double speed; //Def: 1(blocks per tick)
+    private static double speed; //Def: 0.05(blocks per tick)
     private static int edgeCubeLength;//Def: 9
 
     private BukkitRunnable wave;

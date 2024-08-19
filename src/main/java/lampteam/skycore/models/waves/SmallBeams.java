@@ -26,11 +26,15 @@ public class SmallBeams extends AWave {
         Random random = new Random();
 
         wave = new BukkitRunnable() {
+            int counter = 0;
             int x;
             int z;
             boolean onlyAir;
             @Override
             public void run() {
+                if (counter >= totalCount) wave.cancel();
+                counter++;
+
                 do {
                     onlyAir = true;
                     x = random.nextInt((int) arena.getBorders().getMinX(), (int) arena.getBorders().getMaxX());
@@ -55,7 +59,7 @@ public class SmallBeams extends AWave {
                 }
             }
         };
-        wave.runTaskTimer(plugin, 0,20/(totalCount/arena.getWavesInterval()));
+        wave.runTaskTimer(plugin, 0, (int) (20/((double) totalCount/(double) arena.getWavesInterval())));
     }
 
     @Override

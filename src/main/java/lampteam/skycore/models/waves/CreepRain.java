@@ -39,11 +39,15 @@ public class CreepRain extends AWave {
         Random random = new Random();
 
         wave = new BukkitRunnable() {
+            int counter = 0;
             int x;
             int z;
             boolean onlyAir;
             @Override
             public void run() {
+                if (counter >= totalCount) wave.cancel();
+                counter++;
+
                 do {
                     onlyAir = true;
                     x = random.nextInt((int) arena.getBorders().getMinX(), (int) arena.getBorders().getMaxX());
@@ -55,16 +59,16 @@ public class CreepRain extends AWave {
                             break;
                         }
                     }
-                }while (!onlyAir);
+                }while (onlyAir);
                 Location location = new Location(arena.getWorld(), x, arena.getBorders().getMaxY(), z);
 
                 Creeper creeper = (Creeper) arena.getWorld().spawnEntity(location, EntityType.CREEPER);
                 creeper.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
                 creeper.setFuseTicks(mobFuse);
-                creeper.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, potionEffectDuration, 1, false, false, false));
+                creeper.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, potionEffectDuration*20, 1, false, false, false));
             }
         };
-        wave.runTaskTimer(plugin, 0,20/(totalCount/arena.getWavesInterval()));
+        wave.runTaskTimer(plugin, 0,(int) (20/((double) totalCount/(double) arena.getWavesInterval())));
 
     }
 

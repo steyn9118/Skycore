@@ -42,10 +42,14 @@ public class PotionRain extends AWave {
         Random random = new Random();
 
         wave = new BukkitRunnable() {
+            int counter = 0;
             double x;
             double z;
             @Override
             public void run() {
+                if (counter >= totalCount) wave.cancel();
+                counter++;
+
                 for (PlayerModel model : arena.getPlayers()) {
                     x = random.nextDouble(-maxSpreadRadius, maxSpreadRadius);
                     z = random.nextDouble(-maxSpreadRadius, maxSpreadRadius);
@@ -86,7 +90,7 @@ public class PotionRain extends AWave {
                 }
             }
         };
-        wave.runTaskTimer(plugin, 0, 20/(totalCount/arena.getWavesInterval()));
+        wave.runTaskTimer(plugin, 0, (int) (20/((double) totalCount/(double) arena.getWavesInterval())));
     }
 
     @Override

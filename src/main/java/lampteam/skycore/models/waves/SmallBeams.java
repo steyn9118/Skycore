@@ -46,7 +46,7 @@ public class SmallBeams extends AWave {
                             break;
                         }
                     }
-                }while (!onlyAir);
+                }while (onlyAir);
 
                 for (int y = (int) arena.getBorders().getMinY(); y < arena.getBorders().getMaxY(); y++){
                     arena.getWorld().spawnParticle(Particle.FLASH, x, y, z, 1);

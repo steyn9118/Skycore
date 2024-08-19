@@ -87,11 +87,9 @@ public class Worms extends AWave{
                     }
 
                     //поворот
-                    Location playerLocation = player.getEyeLocation().clone();
-                    sheep.getLocation().setDirection(new Vector(playerLocation.getX() - sheepLocation.getX(), playerLocation.getY() - sheepLocation.getY(), playerLocation.getZ() - sheepLocation.getZ()).normalize());
-
+                    Vector step = player.getLocation().subtract(sheep.getLocation()).toVector().normalize();
+                    sheep.getLocation().setDirection(step);
                     //движение вперед
-                    Vector step = sheep.getLocation().getDirection().clone();
                     sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
 
                     if (timer % 10 == 0 && !sheepLocation.getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){

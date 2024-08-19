@@ -59,6 +59,8 @@ public class CreepRain extends AWave {
                             break;
                         }
                     }
+
+                    //;;;l;
                 }while (onlyAir);
                 Location location = new Location(arena.getWorld(), x, arena.getBorders().getMaxY(), z);
 

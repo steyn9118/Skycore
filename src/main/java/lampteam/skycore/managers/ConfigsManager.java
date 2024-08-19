@@ -44,8 +44,7 @@ public class ConfigsManager {
             return;
         }
 
-        File wavesConfigFile = new File("waves.yml");
-        wavesConfig = new Yaml(wavesConfigFile);
+        wavesConfig = new Yaml("waves.yml", plugin.getDataFolder().getPath());
         wavesConfig.write();
     }
 

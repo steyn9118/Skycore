@@ -26,7 +26,7 @@ public class MenusManager {
 
     public static void init(){
 
-        arenaSelector.getFiller().fillBorders(itemArenaBorders);
+        /*arenaSelector.getFiller().fillBorders(itemArenaBorders);
 
         for (Arena arena : ArenasManager.getArenas()) {
             int membersAmount = arena.getMembers().size();
@@ -77,7 +77,7 @@ public class MenusManager {
                 }
             }
 
-    };arenaSelectorRunnable.runTaskTimer(Skycore.getPlugin(), 0, 20);
+    };arenaSelectorRunnable.runTaskTimer(Skycore.getPlugin(), 0, 20);*/
 
     }
 

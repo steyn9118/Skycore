@@ -31,7 +31,11 @@ public final class Skycore extends JavaPlugin {
         WavesManager.loadWavesFromConfig();
 
         ConfigsManager.loadArenasConfigs();
-        ArenasManager.loadArenasFromConfig();
+        try {
+            ArenasManager.loadArenasFromConfig();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         CommandsManager.init();
         MenusManager.init();
@@ -49,7 +53,11 @@ public final class Skycore extends JavaPlugin {
         WavesManager.loadWavesFromConfig();
 
         ConfigsManager.loadArenasConfigs();
-        ArenasManager.loadArenasFromConfig();
+        try {
+            ArenasManager.loadArenasFromConfig();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         MenusManager.init();
     }

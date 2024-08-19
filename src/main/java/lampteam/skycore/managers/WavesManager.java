@@ -55,6 +55,7 @@ public class WavesManager {
                 wavesConfig.getOrSetDefault("totalCount", 60)
         );
         wavesDictionary.put("smallBeams", new SmallBeams());
+        wavesDictionary.put("lava", new Lava());
 
         // TODO все новые волны
     }

@@ -1,6 +1,7 @@
 package lampteam.skycore.managers;
 
 import de.leonhard.storage.Yaml;
+import lampteam.skycore.Utils;
 import lampteam.skycore.models.Arena;
 import lampteam.skycore.models.PlayerModel;
 import net.kyori.adventure.text.Component;
@@ -27,24 +28,26 @@ public class ArenasManager {
         return lastArenaID;
     }
 
-    public static void loadArenasFromConfig(){
+    public static void loadArenasFromConfig() throws Exception {
         lastArenaID = ConfigsManager.getPluginConfig().getOrSetDefault("lastArenaID", 0);
+
+        Location defLocation = new Location(Bukkit.getWorld("world"), 0,0,0);
 
         for (Yaml config : ConfigsManager.getArenasConfigs()){
             int id = config.getOrSetDefault("id", generateArenaID());
             int wavesInterval = config.getOrSetDefault("wavesInterval", 120);
-            String name = config.getOrSetDefault("name", "---");
+            String name = config.getOrSetDefault("name", "none");
             World world = Bukkit.getWorld(config.getOrSetDefault("worldName", "world"));
-            Location lobbyLocation = config.getOrSetDefault("lobbyLocation", new Location(world, 0,0,0));
-            Location spectatorsSpawnPoint = config.getOrSetDefault("spectatorsSpawnPoint", new Location(world, 0,0,0));
-            List<Location> playerSpawnLocations = config.getOrSetDefault("playerSpawnLocations", new ArrayList<>());
+            Location lobbyLocation = Utils.Converter.LocFromStr(config.getOrSetDefault("lobbyLocation", Utils.Converter.LocToStr(defLocation, true)));
+            Location spectatorsSpawnPoint = Utils.Converter.LocFromStr(config.getOrSetDefault("spectatorsSpawnPoint", Utils.Converter.LocToStr(defLocation, true)));
+            List<Location> playerSpawnLocations = Utils.Converter.LocsListFromStrsList(config.getOrSetDefault("playerSpawnLocations", new ArrayList<>()));
 
-            Location centerCore = config.getOrSetDefault("centerCore", new Location(world, 0,0,0));
-            Location corner1 = config.getOrSetDefault("corner1", new Location(world, 0, 0, 0));
-            Location corner2 = config.getOrSetDefault("corner2", new Location(world, 0, 0, 0));
+            Location centerCore = Utils.Converter.LocFromStr(config.getOrSetDefault("centerCore", Utils.Converter.LocToStr(defLocation, false)));
+            Location corner1 = Utils.Converter.LocFromStr(config.getOrSetDefault("corner1", Utils.Converter.LocToStr(defLocation, false)));
+            Location corner2 = Utils.Converter.LocFromStr(config.getOrSetDefault("corner2", Utils.Converter.LocToStr(defLocation, false)));
             BoundingBox borders = new BoundingBox(corner1.x(), corner1.y(), corner1.z(), corner2.x(), corner2.y(), corner2.z());
 
-            Location hubLocation = config.getOrSetDefault("hubLocation", new Location(world, 0,0,0));
+            Location hubLocation = Utils.Converter.LocFromStr(config.getOrSetDefault("hubLocation", Utils.Converter.LocToStr(defLocation, true)));
             int minPlayers = config.getOrSetDefault("minPlayers", 2);
             int lobbyTime = config.getOrSetDefault("lobbyTimerDuration", 60);
 

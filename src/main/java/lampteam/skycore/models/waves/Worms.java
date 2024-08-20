@@ -43,7 +43,6 @@ public class Worms extends AWave{
             sheep.setAdult();
             sheep.setAI(false);
             sheep.setColor(DyeColor.BLACK);
-            sheep.setCollidable(false);
             wormsList.put(sheep,playerModel.getPlayer());
         }
 

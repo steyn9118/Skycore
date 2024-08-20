@@ -30,7 +30,7 @@ public class WavesManager {
                 wavesConfig.getOrSetDefault("totalCount", 240),
                 wavesConfig.getOrSetDefault("potionEffectDuration", 8),
                 wavesConfig.getOrSetDefault("mobSpeed", 0.3),
-                wavesConfig.getOrSetDefault("mobFuse", 15)
+                wavesConfig.getOrSetDefault("mobFuse", 12)
         );
         wavesDictionary.put("creeperRain", new CreepRain());
 

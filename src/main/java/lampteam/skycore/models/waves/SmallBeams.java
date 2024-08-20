@@ -43,7 +43,7 @@ public class SmallBeams extends AWave {
                         if (!arena.getWorld().getBlockAt(x, y, z).isEmpty()) {
                             onlyAir = false;
                             //звук луча на первом блоке(если считать сверху)
-                            arena.getWorld().playSound(new Location(arena.getWorld(), x, y, z), Sound.ITEM_TRIDENT_RETURN, SoundCategory.MASTER,10, 0.8f);
+                            arena.getWorld().playSound(new Location(arena.getWorld(), x, y, z), Sound.ITEM_TRIDENT_RETURN, SoundCategory.MASTER,8, 0.8f);
                             break;
                         }
                     }

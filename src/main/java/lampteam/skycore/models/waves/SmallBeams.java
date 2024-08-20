@@ -2,10 +2,7 @@ package lampteam.skycore.models.waves;
 
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
@@ -46,7 +43,7 @@ public class SmallBeams extends AWave {
                         if (!arena.getWorld().getBlockAt(x, y, z).isEmpty()) {
                             onlyAir = false;
                             //звук луча на первом блоке(если считать сверху)
-                            arena.getWorld().playSound(new Location(arena.getWorld(), x, y, z), Sound.ITEM_TRIDENT_RETURN, 1, 0.8f);
+                            arena.getWorld().playSound(new Location(arena.getWorld(), x, y, z), Sound.ITEM_TRIDENT_RETURN, SoundCategory.MASTER,10, 0.8f);
                             break;
                         }
                     }

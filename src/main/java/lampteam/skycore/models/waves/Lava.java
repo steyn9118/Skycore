@@ -34,10 +34,12 @@ public class Lava extends AWave {
     private BukkitRunnable wave;
 
     public static void loadProperties(
+            int weight1,
             int speed1,
             int standingDuration1,
             int areaSize1
     ){
+        weight = weight1;
         speed = speed1;
         standingDuration = standingDuration1;
         areaSize = areaSize1;

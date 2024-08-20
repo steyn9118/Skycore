@@ -17,9 +17,11 @@ public class Blackhole extends AWave{
     private static double maxRadius;
 
     public static void loadProperties(
+            int weight1,
             double maxPower1,
             double maxRadius1
     ){
+        weight = weight1;
         maxPower = maxPower1;
         maxRadius = maxRadius1;
     }
@@ -40,14 +42,14 @@ public class Blackhole extends AWave{
                 //частицы
                 Bukkit.getWorld("world").spawnParticle(Particle.PORTAL, center, 400, 0, 0, 0, 8,null, true);
                 //звук
-                arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 10*(timer /(float) (arena.getWavesInterval()*20)), 0.1f);
+                arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 6*(timer /(float) (arena.getWavesInterval()*20)), 0.1f);
 
                 list.addAll(center.getNearbyEntitiesByType(LivingEntity.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
                 list.addAll(center.getNearbyEntitiesByType(Projectile.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
                 list.addAll(center.getNearbyEntitiesByType(Item.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
 
                 for (Entity entity : list) {
-                    if (entity.getType().equals(EntityType.PLAYER) || !((Player) entity).getGameMode().equals(GameMode.SURVIVAL)) continue;
+                    if (entity.getType().equals(EntityType.PLAYER) && !((Player) entity).getGameMode().equals(GameMode.SURVIVAL)) continue;
                     if (entity.getLocation().subtract(center).toVector().length() > 50) continue;
                     double distance = entity.getLocation().distance(center);
                     Vector v = center.clone().toVector().subtract(entity.getLocation().clone().toVector()).normalize();

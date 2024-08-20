@@ -15,8 +15,10 @@ public class SmallBeams extends AWave {
     private BukkitRunnable wave;
 
     public static void loadProperties(
+            int weight1,
             int totalCount1
     ){
+        weight = weight1;
         totalCount = totalCount1;
     }
 

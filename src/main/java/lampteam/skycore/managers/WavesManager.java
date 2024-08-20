@@ -29,6 +29,7 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("creeperRain");
         CreepRain.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 1),
                 wavesConfig.getOrSetDefault("totalCount", 240),
                 wavesConfig.getOrSetDefault("potionEffectDuration", 8),
                 wavesConfig.getOrSetDefault("mobSpeed", 0.3),
@@ -38,6 +39,7 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("potionRain");
         PotionRain.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 1),
                 wavesConfig.getOrSetDefault("totalCount", 240),
                 wavesConfig.getOrSetDefault("maxSpreadRadius", 5),
                 wavesConfig.getOrSetDefault("areaSize", 2.5),
@@ -47,6 +49,7 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("worms");
         Worms.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 3),
                 wavesConfig.getOrSetDefault("speed", 0.1),
                 wavesConfig.getOrSetDefault("edgeOfCubeLength", 9)
         );
@@ -54,17 +57,21 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("smallBeams");
         SmallBeams.loadProperties(
-                wavesConfig.getOrSetDefault("totalCount", 240)
+                wavesConfig.getOrSetDefault("weight", 2),
+                wavesConfig.getOrSetDefault("totalCount", 360)
         );
         wavesDictionary.put("smallBeams", new SmallBeams());
+
         //конфиг лавы
-        wavesDictionary.put("lava", new Lava());
+        //wavesDictionary.put("lava", new Lava());
+
         wavesConfig.setPathPrefix("blackHole");
         Blackhole.loadProperties(
-                wavesConfig.getOrSetDefault("maxPower", 1.2),
-                wavesConfig.getOrSetDefault("maxRadius", 50)
+                wavesConfig.getOrSetDefault("weight", 3),
+                wavesConfig.getOrSetDefault("maxPower", 1.0),
+                wavesConfig.getOrSetDefault("maxRadius", 52)
         );
-        wavesDictionary.put("blackhole", new Blackhole());
+        wavesDictionary.put("blackHole", new Blackhole());
         // TODO все новые волны
     }
 

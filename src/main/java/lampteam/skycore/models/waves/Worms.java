@@ -22,9 +22,11 @@ public class Worms extends AWave{
     private BukkitRunnable wave;
 
     public static void loadProperties(
+            int weight1,
             double speed1,
             int edgeCubeLength1
     ){
+        weight = weight1;
         speed = speed1;
         edgeCubeLength = edgeCubeLength1;
     }

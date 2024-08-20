@@ -27,11 +27,13 @@ public class PotionRain extends AWave {
     private BukkitRunnable wave;
 
     public static void loadProperties(
+            int weight1,
             int totalCount1,
             int maxSpreadRadius1,
             double areaSize1,
             int areaDuration1
     ){
+        weight = weight1;
         totalCount = totalCount1;
         maxSpreadRadius = maxSpreadRadius1;
         areaSize = areaSize1;

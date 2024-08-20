@@ -23,11 +23,13 @@ public class CreepRain extends AWave {
     private BukkitRunnable wave;
 
     public static void loadProperties(
-        int totalCount1,
-        int potionEffectDuration1,
-        double mobSpeed1,
-        int mobFuse1
+            int weight1,
+            int totalCount1,
+            int potionEffectDuration1,
+            double mobSpeed1,
+            int mobFuse1
     ){
+        weight = weight1;
         totalCount = totalCount1;
         potionEffectDuration = potionEffectDuration1;
         mobSpeed = mobSpeed1;

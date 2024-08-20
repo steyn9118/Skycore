@@ -2,8 +2,8 @@ package lampteam.skycore.models.waves;
 
 public abstract class AWave implements IWave {
 
-    protected int weight;
-    protected String name;
+    protected static int weight;
+    protected static String name;
 
     public int getWeight(){
         return weight;

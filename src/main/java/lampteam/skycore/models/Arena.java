@@ -176,13 +176,9 @@ public class Arena {
         asyncWavesPoolCreator = new BukkitRunnable() {
             @Override
             public void run() {
-                return;
-                /*wavesPool.clear();
+                wavesPool.clear();
 
                 List<AWave> tempCollection = wavesCollection;
-
-                int index = 0;
-
 
                 int counter = 1;
                 while (true){
@@ -207,7 +203,7 @@ public class Arena {
                     tempCollection.remove(selectedWave);
                     wavesPool.add(selectedWave);
                     counter++;
-                }*/
+                }
             }
         };
 

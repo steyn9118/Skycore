@@ -52,7 +52,7 @@ public class CreepRain extends AWave {
                     onlyAir = true;
                     x = random.nextInt((int) arena.getBorders().getMinX(), (int) arena.getBorders().getMaxX());
                     z = random.nextInt((int) arena.getBorders().getMinZ(), (int) arena.getBorders().getMaxZ());
-                    for (int y = (int) arena.getBorders().getMinY(); y < arena.getBorders().getMaxY(); y++) {
+                    for (int y = (int) arena.getBorders().getMaxY(); y > arena.getBorders().getMinY(); y--) {
                         //проверка что столб блоков не пустой
                         if (!arena.getWorld().getBlockAt(x, y, z).isEmpty()) {
                             onlyAir = false;

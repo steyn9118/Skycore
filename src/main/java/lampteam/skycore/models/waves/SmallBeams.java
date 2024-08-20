@@ -2,8 +2,10 @@ package lampteam.skycore.models.waves;
 
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
@@ -39,17 +41,20 @@ public class SmallBeams extends AWave {
                     onlyAir = true;
                     x = random.nextInt((int) arena.getBorders().getMinX(), (int) arena.getBorders().getMaxX());
                     z = random.nextInt((int) arena.getBorders().getMinZ(), (int) arena.getBorders().getMaxZ());
-                    for (int y = (int) arena.getBorders().getMinY(); y < arena.getBorders().getMaxY(); y++) {
+                    for (int y = (int) arena.getBorders().getMaxY(); y > arena.getBorders().getMinY(); y--) {
                         //проверка что столб блоков не пустой
                         if (!arena.getWorld().getBlockAt(x, y, z).isEmpty()) {
                             onlyAir = false;
+                            //звук луча на первом блоке(если считать сверху)
+                            arena.getWorld().playSound(new Location(arena.getWorld(), x, y, z), Sound.ITEM_TRIDENT_RETURN, 1, 0.8f);
                             break;
                         }
                     }
                 }while (onlyAir);
 
                 for (int y = (int) arena.getBorders().getMinY(); y < arena.getBorders().getMaxY(); y++){
-                    arena.getWorld().spawnParticle(Particle.FLASH, x, y, z, 1);
+                    //частицы
+                    arena.getWorld().spawnParticle(Particle.FLASH, x, y, z, 1, 0, 0, 0, 0, null, true);
 
                     arena.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
                     arena.getWorld().getBlockAt(x+1, y, z).setType(Material.AIR);

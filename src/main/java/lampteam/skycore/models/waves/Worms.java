@@ -55,14 +55,14 @@ public class Worms extends AWave{
                     Location sheepLocation = sheep.getLocation().clone();
 
                     if (!arena.getPlayers().contains(PlayerModelsManager.getModelOfPlayer(player))){
-                        sheep.eject();
+                        sheep.remove();
                         //можно ли изменять хешмапу во время итерации?
                         wormsList.remove(sheep, player);
                         continue;
                     }
 
                     if (sheep.isSheared()){
-                        sheep.eject();
+                        sheep.remove();
                         wormsList.remove(sheep, player);
                         //я не знаю как по другому сетать много блоков
                         int halfLenght = (edgeCubeLength-1)/2;
@@ -87,8 +87,9 @@ public class Worms extends AWave{
                     }
 
                     //поворот
-                    Vector step = player.getLocation().subtract(sheep.getLocation()).toVector().normalize();
+                    Vector step = player.getEyeLocation().subtract(sheep.getLocation()).toVector().normalize();
                     sheep.getLocation().setDirection(step);
+                    sheep.getEyeLocation().setDirection(step);
                     //движение вперед
                     sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
 

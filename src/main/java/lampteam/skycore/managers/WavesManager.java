@@ -3,6 +3,8 @@ package lampteam.skycore.managers;
 import de.leonhard.storage.Yaml;
 import lampteam.skycore.models.waves.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,8 +12,8 @@ public class WavesManager {
 
     private static final HashMap<String, AWave> wavesDictionary = new HashMap<>();
 
-    public static List<AWave> getAllWaves(){
-        return wavesDictionary.values().stream().toList();
+    public static Collection<AWave> getAllWaves(){
+        return wavesDictionary.values();
     }
 
     public static AWave getWaveByName(String name){

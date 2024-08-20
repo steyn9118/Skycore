@@ -42,13 +42,12 @@ public class Arena {
     private final List<PlayerModel> spectators = new ArrayList<>();
     private final List<PlayerModel> players = new ArrayList<>();
 
-    private final List<AWave> wavesCollection;
-    private final List<AWave> wavesPool = new ArrayList<>();
+    private final Collection<AWave> wavesCollection;
+    private final List<AWave> wavesQueue = new ArrayList<>();
     private final List<AWave> activeWaves = new ArrayList<>();
 
     private final BukkitRunnable waveTimer;
     private final BukkitRunnable mainTimer;
-    private final BukkitRunnable asyncWavesPoolCreator;
     private final BukkitRunnable lobbyTimer;
 
     private final Random random = new Random();
@@ -119,7 +118,10 @@ public class Arena {
 
             @Override
             public void run() {
-                if (players.isEmpty()) endGame();
+                if (players.isEmpty()){
+                    endGame();
+                    this.cancel();
+                }
 
                 time++;
 
@@ -173,40 +175,6 @@ public class Arena {
             }
         };
 
-        asyncWavesPoolCreator = new BukkitRunnable() {
-            @Override
-            public void run() {
-                wavesPool.clear();
-
-                List<AWave> tempCollection = wavesCollection;
-
-                int counter = 1;
-                while (true){
-                    int chance = random.nextInt(0, 101);
-
-                    int diff;
-
-                    if (chance < 50) diff = 0;
-                    else if (chance < 75) diff = -1;
-                    else diff = 1;
-
-                    if (counter + diff != 0) counter += diff;
-
-                    int finalCounter = counter;
-
-                    List<AWave> wavesCandidates = tempCollection.stream().filter(wave -> wave.getWeight() == finalCounter).toList();
-                    if (wavesCandidates.isEmpty()) wavesCandidates = tempCollection.stream().filter(wave -> wave.getWeight() == finalCounter - 1).toList();
-                    if (wavesCandidates.isEmpty()) wavesCandidates = tempCollection.stream().filter(wave -> wave.getWeight() == finalCounter + 1).toList();
-                    if (wavesCandidates.isEmpty()) break;
-
-                    AWave selectedWave = wavesCandidates.get(random.nextInt(0, wavesCandidates.size()));
-                    tempCollection.remove(selectedWave);
-                    wavesPool.add(selectedWave);
-                    counter++;
-                }
-            }
-        };
-
         createWavesPool();
     }
 
@@ -231,27 +199,43 @@ public class Arena {
     }
 
     private void endGame(){
-        try {
-            mainTimer.cancel();
-            waveTimer.cancel();
-            lobbyTimer.cancel();
-        } catch (IllegalStateException e){
-            // МНЕ ПОХУУЙ
-        }
+        BukkitRunnable delayedEndGame = new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    mainTimer.cancel();
+                    waveTimer.cancel();
+                    lobbyTimer.cancel();
+                } catch (IllegalStateException e){
+                    // МНЕ ПОХУУЙ
+                }
 
-        players.clear();
-        spectators.clear();
-        members.clear();
+                for (PlayerModel model : spectators){
+                    Player player = model.getPlayer();
+                    clearPlayer(model);
 
-        for (AWave wave : activeWaves) wave.stopWave();
-        activeWaves.clear();
+                    player.hideBossBar(lobbyTimerBar);
+                    player.hideBossBar(wavesTimerBar);
+                    player.teleport(hubLocation);
+                    player.sendMessage(Component.text("Вы покинули арену"));
+                }
 
-        // TODO ресет карты
+                players.clear();
+                spectators.clear();
+                members.clear();
 
-        gameActive = false;
-        lobbyTimerActive = false;
-        resetLobbyTimerDisplay();
-        createWavesPool();
+                for (AWave wave : activeWaves) wave.stopWave();
+                activeWaves.clear();
+
+                // TODO ресет карты
+
+                gameActive = false;
+                lobbyTimerActive = false;
+                resetLobbyTimerDisplay();
+                createWavesPool();
+            }
+        };
+        delayedEndGame.runTaskLater(plugin, 10*20);
     }
 
     public void forceStop(){
@@ -276,8 +260,8 @@ public class Arena {
     }
 
     private void startNewWave(){
-        AWave currentWave = wavesPool.getFirst();
-        wavesPool.removeFirst();
+        AWave currentWave = wavesQueue.getFirst();
+        wavesQueue.removeFirst();
         activeWaves.add(currentWave);
         currentWave.startWave(arena);
 
@@ -396,7 +380,34 @@ public class Arena {
     }
 
     private void createWavesPool(){
-        asyncWavesPoolCreator.runTask(plugin);
+        wavesQueue.clear();
+
+        Collection<AWave> tempCollection = wavesCollection;
+
+        int counter = 1;
+        while (true){
+            int chance = random.nextInt(0, 101);
+
+            int diff;
+
+            if (chance < 50) diff = 0;
+            else if (chance < 75) diff = -1;
+            else diff = 1;
+
+            if (counter + diff != 0) counter += diff;
+
+            int finalCounter = counter;
+
+            List<AWave> wavesCandidates = tempCollection.stream().filter(wave -> wave.getWeight() == finalCounter).toList();
+            if (wavesCandidates.isEmpty()) wavesCandidates = tempCollection.stream().filter(wave -> wave.getWeight() == finalCounter - 1).toList();
+            if (wavesCandidates.isEmpty()) wavesCandidates = tempCollection.stream().filter(wave -> wave.getWeight() == finalCounter + 1).toList();
+            if (wavesCandidates.isEmpty()) break;
+
+            AWave selectedWave = wavesCandidates.get(random.nextInt(0, wavesCandidates.size()));
+            tempCollection.remove(selectedWave);
+            wavesQueue.add(selectedWave);
+            counter++;
+        }
     }
 
     private void tryStartLobbyTimer(){

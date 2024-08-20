@@ -7,6 +7,7 @@ import lampteam.skycore.models.PlayerModel;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
@@ -62,6 +63,8 @@ public class Worms extends AWave{
                     }
 
                     if (sheep.isSheared()){
+                        //звук
+                        arena.getWorld().playSound(sheepLocation, Sound.ENTITY_SHEEP_AMBIENT, 1, 0.1f);
                         sheep.remove();
                         wormsList.remove(sheep, player);
                         //я не знаю как по другому сетать много блоков

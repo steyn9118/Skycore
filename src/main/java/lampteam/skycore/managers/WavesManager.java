@@ -28,9 +28,9 @@ public class WavesManager {
         wavesConfig.setPathPrefix("creeperRain");
         CreepRain.loadProperties(
                 wavesConfig.getOrSetDefault("totalCount", 240),
-                wavesConfig.getOrSetDefault("potionEffectDuration", 10),
-                wavesConfig.getOrSetDefault("mobSpeed", 0.1),
-                wavesConfig.getOrSetDefault("mobFuse", 20)
+                wavesConfig.getOrSetDefault("potionEffectDuration", 8),
+                wavesConfig.getOrSetDefault("mobSpeed", 0.3),
+                wavesConfig.getOrSetDefault("mobFuse", 15)
         );
         wavesDictionary.put("creeperRain", new CreepRain());
 
@@ -45,18 +45,23 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("worms");
         Worms.loadProperties(
-                wavesConfig.getOrSetDefault("speed", 1),
+                wavesConfig.getOrSetDefault("speed", 0.1),
                 wavesConfig.getOrSetDefault("edgeOfCubeLength", 9)
         );
         wavesDictionary.put("worms", new Worms());
 
         wavesConfig.setPathPrefix("smallBeams");
         SmallBeams.loadProperties(
-                wavesConfig.getOrSetDefault("totalCount", 60)
+                wavesConfig.getOrSetDefault("totalCount", 240)
         );
         wavesDictionary.put("smallBeams", new SmallBeams());
+        //конфиг лавы
         wavesDictionary.put("lava", new Lava());
-
+        Blackhole.loadProperties(
+                wavesConfig.getOrSetDefault("maxPower", 3),
+                wavesConfig.getOrSetDefault("maxRadius", 90)
+        );
+        wavesDictionary.put("blackhole", new Blackhole());
         // TODO все новые волны
     }
 

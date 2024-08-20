@@ -74,7 +74,8 @@ public class Lava extends AWave {
                 shift += 1;
 
             }
-        };wave.runTaskTimer(plugin, 0, 20);
+        };
+        wave.runTaskTimer(plugin, 0, 20);
     }
 
     @Override

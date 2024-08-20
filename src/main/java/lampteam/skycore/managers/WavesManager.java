@@ -58,7 +58,7 @@ public class WavesManager {
         //конфиг лавы
         wavesDictionary.put("lava", new Lava());
         Blackhole.loadProperties(
-                wavesConfig.getOrSetDefault("maxPower", 3),
+                wavesConfig.getOrSetDefault("maxPower", 1),
                 wavesConfig.getOrSetDefault("maxRadius", 50)
         );
         wavesDictionary.put("blackhole", new Blackhole());

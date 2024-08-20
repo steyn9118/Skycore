@@ -33,7 +33,7 @@ public class Blackhole extends AWave{
     public void startWave(Arena arena) {
         Set<Entity> list = new HashSet<>();
 
-        Location center = arena.getCenterCore().add(0,2,0);
+        Location center = arena.getCenterCore().add(0.5,2.5,0.5);
 
         wave = new BukkitRunnable() {
             int timer = 0;
@@ -41,13 +41,13 @@ public class Blackhole extends AWave{
             @Override
             public void run() {
                 //частицы
-                Bukkit.getWorld("world").spawnParticle(Particle.PORTAL, center, (400*((timer*2)/(arena.getWavesInterval()*20))), 0, 0, 0, (5 + 5*((double) (timer * 2) /(double) (arena.getWavesInterval()*20))),null, true);
+                Bukkit.getWorld("world").spawnParticle(Particle.PORTAL, center, (400*(timer/(arena.getWavesInterval()*20))), 0, 0, 0, (5d + 5d*((double) timer /arena.getWavesInterval()*20d)),null, true);
                 //звук
-                arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 10*((float) (timer * 2) /(float) (arena.getWavesInterval()*20)), 0.1f);
+                arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 10*(timer /(float) (arena.getWavesInterval()*20)), 0.1f);
 
-                list.addAll(center.getNearbyEntitiesByType(LivingEntity.class, maxRadius*((double) (timer * 2) /(double) (arena.getWavesInterval()*20))));
-                list.addAll(center.getNearbyEntitiesByType(Projectile.class, maxRadius*((double) (timer * 2) /(double) (arena.getWavesInterval()*20))));
-                list.addAll(center.getNearbyEntitiesByType(Item.class, maxRadius*((double) (timer * 2) /(double) (arena.getWavesInterval()*20))));
+                list.addAll(center.getNearbyEntitiesByType(LivingEntity.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
+                list.addAll(center.getNearbyEntitiesByType(Projectile.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
+                list.addAll(center.getNearbyEntitiesByType(Item.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
 
                 for (Entity entity : list) {
                     double distance = entity.getLocation().distance(center);
@@ -58,7 +58,7 @@ public class Blackhole extends AWave{
                 }
                 list.clear();
 
-                if (timer*2 < arena.getWavesInterval()*20) timer++;
+                if (timer < arena.getWavesInterval()*20) timer+=2;
             }
         };
         wave.runTaskTimer(plugin,0,2);

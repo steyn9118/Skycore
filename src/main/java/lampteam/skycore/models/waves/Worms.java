@@ -54,7 +54,11 @@ public class Worms extends AWave{
                     if (!arena.getPlayers().contains(PlayerModelsManager.getModelOfPlayer(player))){
                         sheep.remove();
                         //можно ли изменять хешмапу во время итерации?
-                        wormsList.remove(sheep, player);
+                        try {
+                            wormsList.remove(sheep, player);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                         continue;
                     }
 
@@ -62,7 +66,11 @@ public class Worms extends AWave{
                         //звук
                         arena.getWorld().playSound(sheepLocation, Sound.ENTITY_SHEEP_AMBIENT, SoundCategory.MASTER, 2, 0.1f);
                         sheep.remove();
-                        wormsList.remove(sheep, player);
+                        try {
+                            wormsList.remove(sheep, player);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                         //я не знаю как по другому сетать много блоков
                         int halfLenght = (edgeCubeLength-1)/2;
                         for (int x = -halfLenght; x < halfLenght; x++){

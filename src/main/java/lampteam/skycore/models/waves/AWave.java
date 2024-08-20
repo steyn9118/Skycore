@@ -9,4 +9,8 @@ public abstract class AWave implements IWave {
         return weight;
     }
 
+    public String getName(){
+        return name;
+    }
+
 }

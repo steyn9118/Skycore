@@ -7,24 +7,17 @@ import lampteam.skycore.models.waves.AWave;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import net.kyori.adventure.title.Title;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Arena {
     private final int id;
-    private boolean gameActive = false;
-    private boolean lobbyTimerActive = false;
     private final int wavesInterval; // Секунды
     private final String name;
     private final Arena arena;
@@ -38,9 +31,12 @@ public class Arena {
     private final int lobbyTimerDuration;
     private final int minPlayers;
 
+    private boolean gameActive = false;
+    private boolean lobbyTimerActive = false;
+
     private final Skycore plugin = Skycore.getPlugin();
     private final BossBar wavesTimerBar = BossBar.bossBar(Component.text("00:00"), 0f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_20);
-    private final BossBar lobbyTimerBar = BossBar.bossBar(Component.text(""), 1f, BossBar.Color.GREEN, BossBar.Overlay.PROGRESS);
+    private final BossBar lobbyTimerBar = BossBar.bossBar(Component.text("Ожидаем игроков..."), 1f, BossBar.Color.GREEN, BossBar.Overlay.PROGRESS);
 
     private final List<PlayerModel> members = new ArrayList<>();
     private final List<PlayerModel> spectators = new ArrayList<>();
@@ -157,11 +153,19 @@ public class Arena {
             int counter = lobbyTimerDuration;
             @Override
             public void run() {
-                if (players.size() < minPlayers) this.cancel();
+                if (players.size() < minPlayers) {
+                    this.cancel();
+                    lobbyTimerActive = false;
+                    resetLobbyTimerDisplay();
+                    return;
+                }
 
                 if (counter == 0) {
+                    this.cancel();
                     startGame();
                     lobbyTimerActive = false;
+                    resetLobbyTimerDisplay();
+                    return;
                 }
 
                 setLobbyTimerDisplay(counter);
@@ -172,10 +176,13 @@ public class Arena {
         asyncWavesPoolCreator = new BukkitRunnable() {
             @Override
             public void run() {
-                wavesPool.clear();
+                return;
+                /*wavesPool.clear();
 
-                List<AWave> tempCollection = new ArrayList<>();
-                Collections.copy(tempCollection, wavesCollection);
+                List<AWave> tempCollection = wavesCollection;
+
+                int index = 0;
+
 
                 int counter = 1;
                 while (true){
@@ -200,9 +207,11 @@ public class Arena {
                     tempCollection.remove(selectedWave);
                     wavesPool.add(selectedWave);
                     counter++;
-                }
+                }*/
             }
         };
+
+        createWavesPool();
     }
 
     public void startGame(){
@@ -226,9 +235,13 @@ public class Arena {
     }
 
     private void endGame(){
-        mainTimer.cancel();
-        waveTimer.cancel();
-        lobbyTimer.cancel();
+        try {
+            mainTimer.cancel();
+            waveTimer.cancel();
+            lobbyTimer.cancel();
+        } catch (IllegalStateException e){
+            // МНЕ ПОХУУЙ
+        }
 
         players.clear();
         spectators.clear();
@@ -241,6 +254,7 @@ public class Arena {
 
         gameActive = false;
         lobbyTimerActive = false;
+        resetLobbyTimerDisplay();
         createWavesPool();
     }
 
@@ -272,6 +286,8 @@ public class Arena {
         currentWave.startWave(arena);
 
         for (PlayerModel playerModel : players) playerModel.survivedWave();
+
+        for (PlayerModel model : members) model.getPlayer().showTitle(Title.title(Component.text("Началась новая волна!").color(NamedTextColor.RED), Component.text("")));
     }
 
     public void forceStartWave(AWave wave){
@@ -280,13 +296,18 @@ public class Arena {
     }
 
     private void setWavesTimerDisplay(int currentTime){
-        wavesTimerBar.name(Component.text(Utils.convertSecondsToMinutesAndSeconds(currentTime)).color(NamedTextColor.WHITE));
-        wavesTimerBar.progress(1 - ((Float.parseFloat(Integer.toString(currentTime)) % 120) / 120));
+        wavesTimerBar.name(Component.text("Следующая волна через " + Utils.convertSecondsToMinutesAndSeconds(wavesInterval - currentTime % wavesInterval)).color(NamedTextColor.WHITE));
+        wavesTimerBar.progress(1 - ((Float.parseFloat(Integer.toString(currentTime)) % wavesInterval) / wavesInterval)  );
     }
 
     private void setLobbyTimerDisplay(int currentTime){
         lobbyTimerBar.name(Component.text("До начала игры: " + currentTime + " секунд").color(NamedTextColor.WHITE));
-        wavesTimerBar.progress((Float.parseFloat(Integer.toString(currentTime)) / lobbyTimerDuration));
+        lobbyTimerBar.progress((Float.parseFloat(Integer.toString(currentTime)) / lobbyTimerDuration));
+    }
+
+    private void resetLobbyTimerDisplay(){
+        lobbyTimerBar.name(Component.text("Ожидаем игроков...").color(NamedTextColor.WHITE));
+        lobbyTimerBar.progress(1f);
     }
 
     public void tryJoinPlayer(PlayerModel model){
@@ -310,7 +331,7 @@ public class Arena {
         Player player = model.getPlayer();
         player.teleport(spectatorsSpawnPoint);
         player.setGameMode(GameMode.SPECTATOR);
-        player.sendMessage(Component.text("Вы присоединились к арене как игрок"));
+        player.sendMessage(Component.text("Вы присоединились к арене как наблюдатель"));
         player.getInventory().setItem(0, new ItemStack(Material.RED_BANNER));
         player.getInventory().setItem(4, new ItemStack(Material.IRON_DOOR));
         player.getInventory().setItem(8, new ItemStack(Material.GREEN_BANNER));
@@ -319,7 +340,7 @@ public class Arena {
     private void joinAsPlayer(PlayerModel model){
         players.add(model);
         Player player = model.getPlayer();
-        player.sendMessage(Component.text("Вы присоединились к арене как наблюдатель"));
+        player.sendMessage(Component.text("Вы присоединились к арене как игрок"));
         player.teleport(lobbyLocation);
 
         tryStartLobbyTimer();
@@ -354,6 +375,7 @@ public class Arena {
 
         players.remove(model);
         joinAsSpectator(model);
+        // TODO тп на место смерти
     }
 
     public void spectatePlayer(PlayerModel model, LinearDirection direction){
@@ -378,13 +400,21 @@ public class Arena {
     }
 
     private void createWavesPool(){
-        asyncWavesPoolCreator.runTaskAsynchronously(plugin);
+        asyncWavesPoolCreator.runTask(plugin);
     }
 
     private void tryStartLobbyTimer(){
-        if (!lobbyTimerActive) {
+        if (!lobbyTimerActive && players.size() >= minPlayers) {
             lobbyTimer.runTaskTimer(plugin, 0, 20);
             lobbyTimerActive = true;
         }
+    }
+
+    public void debugValues(Player player){
+        player.sendMessage("GameActive " + gameActive);
+        player.sendMessage("LobbyTimerActive " + lobbyTimerActive);
+        player.sendMessage("Members " + Arrays.toString(members.toArray()));
+        player.sendMessage("Players " + Arrays.toString(players.toArray()));
+        player.sendMessage("Spectators " + Arrays.toString(spectators.toArray()));
     }
 }

@@ -48,6 +48,8 @@ public class PlayerRelatedEvents implements Listener {
     @EventHandler
     public void onSpectatorInteract(PlayerInteractEvent event) {
         PlayerModel spectator = PlayerModelsManager.getModelOfPlayer(event.getPlayer());
+        assert spectator != null;
+        if (spectator.getCurrentArena() == null) return;
         if (!spectator.getCurrentArena().getSpectators().contains(spectator)) {
             return;
         }
@@ -67,6 +69,8 @@ public class PlayerRelatedEvents implements Listener {
     @EventHandler
     public void onSpectatorDropItem(PlayerDropItemEvent event) {
         PlayerModel spectator = PlayerModelsManager.getModelOfPlayer(event.getPlayer());
+        assert spectator != null;
+        if (spectator.getCurrentArena() == null) return;
         if (!spectator.getCurrentArena().getSpectators().contains(spectator)) {
             return;
         }
@@ -76,6 +80,8 @@ public class PlayerRelatedEvents implements Listener {
     @EventHandler
     public void onSpectatorClickItem(InventoryClickEvent event) {
         PlayerModel spectator = PlayerModelsManager.getModelOfPlayer((Player) event.getWhoClicked());
+        assert spectator != null;
+        if (spectator.getCurrentArena() == null) return;
         if (!spectator.getCurrentArena().getSpectators().contains(spectator)) {
             return;
         }

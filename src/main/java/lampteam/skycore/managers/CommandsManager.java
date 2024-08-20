@@ -43,7 +43,8 @@ public class CommandsManager {
                         .replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(info ->
                                 new IStringTooltip[] {
                                         StringTooltip.ofString("forcewave", "Вызывает волну"),
-                                        StringTooltip.ofString("forcestop", "Останавливает игру на арене")
+                                        StringTooltip.ofString("forcestop", "Останавливает игру на арене"),
+                                        StringTooltip.ofString("printinfo", "Показывает информацию арены")
                                 }
                         )))
                 .withArguments(new IntegerArgument("arenaid")
@@ -72,6 +73,9 @@ public class CommandsManager {
                             }
                             arena.forceStartWave(wave);
                         }
+                        case "printinfo" -> {
+                            arena.debugValues((Player) sender);
+                        }
                     }
                 })
                 .register();
@@ -80,27 +84,35 @@ public class CommandsManager {
                 .withArguments(new StringArgument("action")
                         .replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(info ->
                                 new IStringTooltip[] {
-                                        StringTooltip.ofString("join", "")
+                                        StringTooltip.ofString("join", ""),
+                                        StringTooltip.ofString("leave", "")
                                 }
                         )))
-                .withArguments(new IntegerArgument("arenaid")
+                .withOptionalArguments(new IntegerArgument("arenaid")
                         .replaceSuggestions(ArgumentSuggestions.strings(
                                 ArenasManager.getAllIDs()
                         )))
                 .executes((sender, args) -> {
                     String action = (String) args.get("action");
                     assert action != null;
-                    Arena arena = ArenasManager.getArenaByID((Integer) args.get("arenaid"));
-                    assert arena != null;
-                    if (action.equals("join")){
-                        if (sender instanceof Player){
-                            PlayerModel model = PlayerModelsManager.getModelOfPlayer((Player) sender);
-                            assert model != null;
-                            arena.tryJoinPlayer(model);
+                    switch (action){
+                        case "join" -> {
+                            Arena arena = ArenasManager.getArenaByID((Integer) args.get("arenaid"));
+                            assert arena != null;
+                            if (sender instanceof Player){
+                                PlayerModel model = PlayerModelsManager.getModelOfPlayer((Player) sender);
+                                assert model != null;
+                                arena.tryJoinPlayer(model);
+                            }
                         }
-                        return;
+                        case "leave" -> {
+                            if (sender instanceof Player){
+                                PlayerModel model = PlayerModelsManager.getModelOfPlayer((Player) sender);
+                                assert model != null;
+                                model.getCurrentArena().tryLeavePlayer(model);
+                            }
+                        }
                     }
-
                 })
                 .register();
     }

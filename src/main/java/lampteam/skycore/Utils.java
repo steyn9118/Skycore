@@ -11,7 +11,8 @@ public class Utils {
     public static String convertSecondsToMinutesAndSeconds(int currentTime){
         int minutes = (int) Math.floor(Float.parseFloat(Integer.toString(currentTime)) / 60);
         int seconds = currentTime % 60;
-        return minutes+":"+seconds;
+        if (seconds < 10) return  minutes + ":0" + seconds;
+        else return minutes+":"+seconds;
     }
 
     // COPIUM

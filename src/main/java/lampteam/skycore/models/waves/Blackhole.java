@@ -3,10 +3,7 @@ package lampteam.skycore.models.waves;
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -41,7 +38,7 @@ public class Blackhole extends AWave{
             @Override
             public void run() {
                 //частицы
-                Bukkit.getWorld("world").spawnParticle(Particle.PORTAL, center, (400*(timer/(arena.getWavesInterval()*20))), 0, 0, 0, (5d + 5d*((double) timer /arena.getWavesInterval()*20d)),null, true);
+                Bukkit.getWorld("world").spawnParticle(Particle.PORTAL, center, 400, 0, 0, 0, 8,null, true);
                 //звук
                 arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 10*(timer /(float) (arena.getWavesInterval()*20)), 0.1f);
 
@@ -50,6 +47,8 @@ public class Blackhole extends AWave{
                 list.addAll(center.getNearbyEntitiesByType(Item.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
 
                 for (Entity entity : list) {
+                    if (entity.getType().equals(EntityType.PLAYER) || !((Player) entity).getGameMode().equals(GameMode.SURVIVAL)) continue;
+                    if (entity.getLocation().subtract(center).toVector().length() > 50) continue;
                     double distance = entity.getLocation().distance(center);
                     Vector v = center.clone().toVector().subtract(entity.getLocation().clone().toVector()).normalize();
                     if (distance < 3) entity.setVelocity(v.multiply(Math.pow(distance / 3, 2)));

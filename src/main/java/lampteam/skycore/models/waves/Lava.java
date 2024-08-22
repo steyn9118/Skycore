@@ -27,22 +27,14 @@ import org.bukkit.util.BoundingBox;
 public class Lava extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
-    private static int speed;
-    private static int standingDuration;
-    private static double areaSize;
+    private static int lastElevationPoint;
 
     private BukkitRunnable wave;
 
     public static void loadProperties(
-            int weight1,
-            int speed1,
-            int standingDuration1,
-            int areaSize1
+            int lastElevationPoint1
     ){
-        weight = weight1;
-        speed = speed1;
-        standingDuration = standingDuration1;
-        areaSize = areaSize1;
+        lastElevationPoint = lastElevationPoint1;
     }
 
     @Override
@@ -59,7 +51,7 @@ public class Lava extends AWave {
             public void run() {
 
                 BoundingBox borders = arena.getBorders();
-                BlockVector3 pos1 = BlockVector3.at(borders.getMinX(), borders.getMinY() + shift, borders.getMinZ());
+                BlockVector3 pos1 = BlockVector3.at(borders.getMaxX(), borders.getMinY() + shift, borders.getMaxZ());
                 BlockVector3 pos2 = BlockVector3.at(borders.getMinX(), borders.getMinY() + shift, borders.getMinZ());
 
                 World world = BukkitAdapter.adapt(arena.getWorld());
@@ -77,12 +69,12 @@ public class Lava extends AWave {
 
             }
         };
-        wave.runTaskTimer(plugin, 0, 20);
+        wave.runTaskTimer(plugin, 0, (int) (20/((arena.getBorders().getHeight() - (arena.getBorders().getCenterY() - lastElevationPoint)) / (double) arena.getWavesInterval())));
     }
 
     @Override
     public void stopWave() {
-
+        wave.cancel();
     }
 
 }

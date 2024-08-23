@@ -62,8 +62,12 @@ public class WavesManager {
         );
         wavesDictionary.put("smallBeams", new SmallBeams());
 
-        //конфиг лавы
-        //wavesDictionary.put("lava", new Lava());
+        wavesConfig.setPathPrefix("lava");
+        Lava.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 1),
+                wavesConfig.getOrSetDefault("lastElevationPoint", 43)
+        );
+        wavesDictionary.put("lava", new Lava());
 
         wavesConfig.setPathPrefix("blackHole");
         Blackhole.loadProperties(

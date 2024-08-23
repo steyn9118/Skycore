@@ -32,8 +32,10 @@ public class Lava extends AWave {
     private BukkitRunnable wave;
 
     public static void loadProperties(
+            int weight1,
             int lastElevationPoint1
     ){
+        weight = weight1;
         lastElevationPoint = lastElevationPoint1;
     }
 

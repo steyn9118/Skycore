@@ -12,5 +12,4 @@ public abstract class AWave implements IWave {
     public String getName(){
         return name;
     }
-
 }

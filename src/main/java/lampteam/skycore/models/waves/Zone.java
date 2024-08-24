@@ -8,11 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
 public class Zone extends AWave {
-    Skycore plugin = Skycore.getPlugin();
 
+    private Arena arena1;
     private static double areaSize;
-
-    private BukkitRunnable wave;
 
     public static void loadProperties(
             int weight1,
@@ -26,11 +24,12 @@ public class Zone extends AWave {
 
     @Override
     public void startWave(Arena arena) {
+        arena1 = arena;
         arena.getWorld().getWorldBorder().setSize(areaSize, arena.getWavesInterval());
     }
 
     @Override
     public void stopWave() {
-        wave.cancel();
+        arena1.getWorld().getWorldBorder().setSize(arena1.getBorders().getWidthX());
     }
 }

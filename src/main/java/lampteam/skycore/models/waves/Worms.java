@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Hashtable;
 
@@ -32,7 +33,7 @@ public class Worms extends AWave{
     }
 
     @Override
-    public void startWave(Arena arena) {
+    public void startWave(@NotNull Arena arena) {
 
         Hashtable<Sheep, Player> wormsList = new Hashtable<>();
         for (PlayerModel playerModel : arena.getPlayers()){

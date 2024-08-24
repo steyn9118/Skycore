@@ -2,12 +2,9 @@ package lampteam.skycore.models.waves;
 
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
-import lampteam.skycore.models.LinearDirection;
-import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.BoundingBox;
 
-public class Zone extends AWave {
+public class Border extends AWave {
 
     private Arena arena1;
     private static double areaSize;

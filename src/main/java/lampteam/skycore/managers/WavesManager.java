@@ -4,7 +4,6 @@ import de.leonhard.storage.Yaml;
 import lampteam.skycore.models.waves.*;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,12 +76,12 @@ public class WavesManager {
         );
         wavesDictionary.put("blackHole", new Blackhole());
 
-        wavesConfig.setPathPrefix("zone");
-        Zone.loadProperties(
+        wavesConfig.setPathPrefix("border");
+        Border.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 1),
-                wavesConfig.getOrSetDefault("areaSize", 0.0)
+                wavesConfig.getOrSetDefault("areaSize", 120.0)
         );
-        wavesDictionary.put("zone", new Zone());
+        wavesDictionary.put("border", new Border());
         // TODO все новые волны
     }
 

@@ -20,6 +20,7 @@ import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
+import lampteam.skycore.models.LinearDirection;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
@@ -27,16 +28,16 @@ import org.bukkit.util.BoundingBox;
 public class Lava extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
-    private static int lastElevationPoint;
+    private static double elevationPoint;
 
     private BukkitRunnable wave;
 
     public static void loadProperties(
             int weight1,
-            int lastElevationPoint1
+            int elevationPoint1
     ){
         weight = weight1;
-        lastElevationPoint = lastElevationPoint1;
+        elevationPoint = elevationPoint1;
     }
 
     @Override
@@ -48,15 +49,18 @@ public class Lava extends AWave {
     public void startWave(Arena arena) {
 
         wave = new BukkitRunnable() {
+
             int shift = 0;
+            final BoundingBox borders = arena.getBorders();
+            final World world = BukkitAdapter.adapt(arena.getWorld());
+
             @Override
             public void run() {
 
-                BoundingBox borders = arena.getBorders();
+
                 BlockVector3 pos1 = BlockVector3.at(borders.getMaxX(), borders.getMinY() + shift, borders.getMaxZ());
                 BlockVector3 pos2 = BlockVector3.at(borders.getMinX(), borders.getMinY() + shift, borders.getMinZ());
 
-                World world = BukkitAdapter.adapt(arena.getWorld());
                 CuboidRegion region = new CuboidRegion(world, pos1, pos2);
 
                 Pattern pattern = new BlockPattern(BlockTypes.LAVA.getDefaultState());
@@ -67,11 +71,11 @@ public class Lava extends AWave {
                     editSession.replaceBlocks(region, mask, pattern);
 
                 }
-                shift += 1;
+                shift += LinearDirection.FORWARDS.getValue();
 
             }
         };
-        wave.runTaskTimer(plugin, 0, (int) (20/((arena.getBorders().getHeight() - (arena.getBorders().getCenterY() - lastElevationPoint)) / (double) arena.getWavesInterval())));
+        wave.runTaskTimer(plugin, 0, (int) (20/((arena.getBorders().getHeight() - (arena.getBorders().getCenterY() - elevationPoint)) / (double) arena.getWavesInterval())));
     }
 
     @Override

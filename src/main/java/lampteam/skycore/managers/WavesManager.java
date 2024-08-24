@@ -76,6 +76,13 @@ public class WavesManager {
                 wavesConfig.getOrSetDefault("maxRadius", 52)
         );
         wavesDictionary.put("blackHole", new Blackhole());
+
+        wavesConfig.setPathPrefix("zone");
+        Zone.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 1),
+                wavesConfig.getOrSetDefault("areaSize", 0.0)
+        );
+        wavesDictionary.put("zone", new Zone());
         // TODO все новые волны
     }
 

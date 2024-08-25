@@ -59,8 +59,8 @@ public class Blackhole extends AWave{
                     if (entity.getLocation().subtract(center).toVector().length() > 50) continue;
                     double distance = entity.getLocation().distance(center);
                     Vector v = center.clone().toVector().subtract(entity.getLocation().clone().toVector()).normalize();
-                    if (distance < 3) entity.setVelocity(v.multiply(Math.pow(distance / 3, 2)));
-                    else entity.setVelocity(entity.getVelocity().add(v.multiply(maxPower / distance)));
+                    if (distance < 3) entity.setVelocity(v.clone().multiply(Math.pow(distance / 3, 2)));
+                    else entity.setVelocity(entity.getVelocity().add(v.clone().multiply(maxPower / distance)));
 
                 }
                 list.clear();

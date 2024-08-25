@@ -66,7 +66,7 @@ public class Lava extends AWave {
                     @Override
                     public void run() {
                         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
-                            editSession.setMask(mask);
+                            //editSession.setMask(mask);
                             editSession.replaceBlocks(region, mask, pattern);
                         }
                     }

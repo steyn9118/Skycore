@@ -82,6 +82,15 @@ public class WavesManager {
                 wavesConfig.getOrSetDefault("areaSize", 120.0)
         );
         wavesDictionary.put("border", new Border());
+
+        wavesConfig.setPathPrefix("stormWind");
+        StormWind.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 2),
+                wavesConfig.getOrSetDefault("changeCount", 2),
+                wavesConfig.getOrSetDefault("mainPower", 0.5),
+                wavesConfig.getOrSetDefault("passivePower", 0.3)
+        );
+        wavesDictionary.put("stormWind", new StormWind());
         // TODO все новые волны
     }
 

@@ -8,13 +8,17 @@ import com.sk89q.worldedit.function.pattern.BlockPattern;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
 import lampteam.skycore.models.LinearDirection;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
+
+import java.util.Set;
 
 public class Lava extends AWave {
     Skycore plugin = Skycore.getPlugin();
@@ -42,7 +46,7 @@ public class Lava extends AWave {
 
         wave = new BukkitRunnable() {
 
-            int shift = 0;
+            int y = (int) arena.getBorders().getMinY();
             final BoundingBox borders = arena.getBorders();
             final World world = BukkitAdapter.adapt(arena.getWorld());
 
@@ -50,24 +54,27 @@ public class Lava extends AWave {
             public void run() {
 
 
-                BlockVector3 pos1 = BlockVector3.at(borders.getMaxX(), borders.getMinY() + shift, borders.getMaxZ());
-                BlockVector3 pos2 = BlockVector3.at(borders.getMinX(), borders.getMinY() + shift, borders.getMinZ());
+                BlockVector3 pos1 = BlockVector3.at(borders.getMaxX(), y, borders.getMaxZ());
+                BlockVector3 pos2 = BlockVector3.at(borders.getMinX(), y, borders.getMinZ());
 
                 CuboidRegion region = new CuboidRegion(world, pos1, pos2);
 
                 Pattern pattern = new BlockPattern(BlockTypes.LAVA.getDefaultState());
-                BlockMask mask = new BlockMask();
-                mask.add(BlockTypes.AIR.getDefaultState());
+                BlockMask mask = new BlockMask().add(BlockTypes.AIR.getDefaultState());
 
                 try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
+                    editSession.setMask(mask);
                     editSession.replaceBlocks(region, mask, pattern);
 
+
+
                 }
-                shift += LinearDirection.FORWARDS.getValue();
+                if (y >= arena.getBorders().getMinY() && y <= elevationPoint) y++;
+                else wave.cancel();
 
             }
         };
-        wave.runTaskTimer(plugin, 0, (int) (20/((arena.getBorders().getHeight() - (arena.getBorders().getCenterY() - elevationPoint)) / (double) arena.getWavesInterval())));
+        wave.runTaskTimer(plugin, 0, (int) (20/((elevationPoint - arena.getBorders().getMinY()) / arena.getWavesInterval())));
     }
 
     @Override

@@ -62,10 +62,17 @@ public class Lava extends AWave {
                 Pattern pattern = new BlockPattern(BlockTypes.LAVA.getDefaultState());
                 BlockMask mask = new BlockMask().add(BlockTypes.AIR.getDefaultState());
 
-                try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
-                    editSession.setMask(mask);
-                    editSession.replaceBlocks(region, mask, pattern);
-                }
+                BukkitRunnable lavaSet = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
+                            editSession.setMask(mask);
+                            editSession.replaceBlocks(region, mask, pattern);
+                        }
+                    }
+                };
+                lavaSet.runTaskAsynchronously(plugin);
+
                 if (y >= arena.getBorders().getMinY() && y <= elevationPoint) y++;
                 else wave.cancel();
 

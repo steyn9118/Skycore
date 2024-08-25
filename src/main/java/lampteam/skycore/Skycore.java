@@ -65,5 +65,6 @@ public final class Skycore extends JavaPlugin {
     @Override
     public void onDisable() {
         ConfigsManager.savePluginConfig();
+        ArenasManager.stopEverything();
     }
 }

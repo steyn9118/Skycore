@@ -186,6 +186,15 @@ public class Arena {
 
                 for (PlayerModel model : players){
                     model.incrementAliveTime(1);
+
+                    Player player = model.getPlayer();
+                    if (borders.getMaxY() >= player.getLocation().getBlockY()){
+                        model.setLastSafeLocation(player.getLocation());
+                    } else {
+                        Location safeLocation = model.getLastSafeLocation();
+                        if (safeLocation != null) player.teleport(safeLocation);
+                        else player.teleport(spectatorsSpawnPoint);
+                    }
                 }
 
                 for (PlayerModel model : spectators){
@@ -348,11 +357,14 @@ public class Arena {
     }
 
     private void startNewWave(){
-        if (wavesQueue.isEmpty()) endGame(false);
-        AWave currentWave = wavesQueue.getFirst();
-        wavesQueue.removeFirst();
-        activeWaves.add(currentWave);
-        currentWave.startWave(arena);
+        if (wavesQueue.isEmpty()) {
+            wavesCollection.stream().toList().get(random.nextInt(0, wavesCollection.size())).startWave(this);
+        } else {
+            AWave currentWave = wavesQueue.getFirst();
+            wavesQueue.removeFirst();
+            activeWaves.add(currentWave);
+            currentWave.startWave(arena);
+        }
 
         for (PlayerModel playerModel : players) playerModel.survivedWave();
 

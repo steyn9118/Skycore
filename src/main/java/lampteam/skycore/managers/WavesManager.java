@@ -86,9 +86,8 @@ public class WavesManager {
         wavesConfig.setPathPrefix("stormWind");
         StormWind.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 2),
-                wavesConfig.getOrSetDefault("changeCount", 2),
-                wavesConfig.getOrSetDefault("mainPower", 0.5),
-                wavesConfig.getOrSetDefault("passivePower", 0.3)
+                wavesConfig.getOrSetDefault("changeCount", 4),
+                wavesConfig.getOrSetDefault("mainPower", 0.5)
         );
         wavesDictionary.put("stormWind", new StormWind());
         // TODO все новые волны

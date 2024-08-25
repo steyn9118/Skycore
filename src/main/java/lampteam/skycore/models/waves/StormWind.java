@@ -16,22 +16,19 @@ public class StormWind extends AWave{
     Skycore plugin = Skycore.getPlugin();
 
     private static int weight;
-    private static int changeCount;//Def: 2
+    private static int changeCount;//Def: 4
     private static double mainPower;//Def: 0.05
-    private static double passivePower;//Def: 0.03
 
     private BukkitRunnable wave;
 
     public static void loadProperties(
             int weight1,
             int changeCount1,
-            double mainPower1,
-            double passivePower1
+            double mainPower1
     ){
         weight = weight1;
         changeCount = changeCount1;
-        mainPower = mainPower1;
-        passivePower = passivePower1;
+        mainPower = mainPower1;;
     }
 
     @Override
@@ -47,7 +44,8 @@ public class StormWind extends AWave{
 
             @Override
             public void run() {
-                timer++;
+                if (timer <= arena.getWavesInterval()*20) timer++;
+                else wave.cancel();
 
                 list.addAll(center.getNearbyEntitiesByType(LivingEntity.class, arena.getBorders().getWidthX()+2));
                 list.addAll(center.getNearbyEntitiesByType(Projectile.class, arena.getBorders().getWidthX()+2));
@@ -55,12 +53,7 @@ public class StormWind extends AWave{
 
                 for (Entity entity : list) {
                     if (entity.getType().equals(EntityType.PLAYER) && !((Player) entity).getGameMode().equals(GameMode.SURVIVAL)) continue;
-
-                    if (timer < arena.getWavesInterval() * 20) {
-                        entity.setVelocity(entity.getVelocity().add(direction.clone().multiply(mainPower)));
-                    } else {
-                        entity.setVelocity(entity.getVelocity().add(direction.clone().multiply(passivePower)));
-                    }
+                    entity.setVelocity(entity.getVelocity().add(direction.clone().multiply(mainPower)));
                 }
 
                 if (timer % ((arena.getWavesInterval()*20)/changeCount) == 0){

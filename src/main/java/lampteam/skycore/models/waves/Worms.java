@@ -73,10 +73,10 @@ public class Worms extends AWave{
                         continue;
                     }
 
-                    if (sheep.isSheared() && sheep.getMetadata("speed") == null){
+                    if (sheep.isSheared() && sheep.getColor().equals(DyeColor.BLACK)){
                         Random random = new Random();
                         if (random.nextBoolean()) {
-                            sheep.setMetadata("speed", new FixedMetadataValue(plugin, true));
+                            sheep.setColor(DyeColor.RED);
                             //звук
                             arena.getWorld().playSound(sheepLocation, Sound.ENTITY_SHEEP_AMBIENT, SoundCategory.MASTER, 2, 1.8f);
                         }
@@ -115,9 +115,9 @@ public class Worms extends AWave{
                     //поворот
                     Vector step = player.getEyeLocation().subtract(sheep.getLocation()).toVector().normalize();
                     sheep.getLocation().setDirection(step);
-                    sheep.teleport(sheep.getLocation().setDirection(step));
+                    sheep.teleport(sheep.getLocation().setDirection(step.clone().add(new Vector(0,-1.6,0))));
                     //движение вперед
-                    if (sheep.getMetadata("speed") == null) sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
+                    if (sheep.getColor().equals(DyeColor.BLACK)) sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
                     else sheep.teleport(sheep.getLocation().add(step.multiply(speed*2)));
 
                     if (timer % 10 == 0 && !sheepLocation.getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){

@@ -6,6 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Border extends AWave {
 
+    private static int weight;
     private Arena arena1;
     private static double areaSize;
 
@@ -17,6 +18,11 @@ public class Border extends AWave {
         weight = weight1;
         areaSize = areaSize1;
 
+    }
+
+    @Override
+    public int getWeight(){
+        return weight;
     }
 
     @Override

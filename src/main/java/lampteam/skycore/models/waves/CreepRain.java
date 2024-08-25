@@ -15,6 +15,7 @@ import java.util.Random;
 public class CreepRain extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
+    private static int weight;
     private static int totalCount;//Def: 240
     private static int potionEffectDuration;//Def: 60
     private static double mobSpeed;//Def: 0.3
@@ -34,6 +35,11 @@ public class CreepRain extends AWave {
         potionEffectDuration = potionEffectDuration1;
         mobSpeed = mobSpeed1;
         mobFuse = mobFuse1;
+    }
+
+    @Override
+    public int getWeight(){
+        return weight;
     }
 
     @Override

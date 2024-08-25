@@ -28,6 +28,7 @@ import org.bukkit.util.BoundingBox;
 public class Lava extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
+    private static int weight;
     private static double elevationPoint;
 
     private BukkitRunnable wave;

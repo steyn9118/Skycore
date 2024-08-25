@@ -10,6 +10,7 @@ import java.util.Random;
 public class SmallBeams extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
+    private static int weight;
     private static int totalCount;//Def: 60
 
     private BukkitRunnable wave;
@@ -20,6 +21,11 @@ public class SmallBeams extends AWave {
     ){
         weight = weight1;
         totalCount = totalCount1;
+    }
+
+    @Override
+    public int getWeight(){
+        return weight;
     }
 
     @Override

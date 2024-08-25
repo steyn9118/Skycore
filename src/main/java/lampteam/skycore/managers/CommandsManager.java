@@ -29,9 +29,10 @@ public class CommandsManager {
                 .withPermission(CommandPermission.OP)
                 .executes((sender, args) -> {
                     String action = (String) args.get("action");
-                    assert action != null;
+                    if (action == null) return;
                     if (action.equals("reload")){
                         Skycore.reloadPlugin();
+                        sender.sendMessage(Component.text("Плагин перезагружен"));
                         return;
                     }
 
@@ -44,10 +45,11 @@ public class CommandsManager {
                                 new IStringTooltip[] {
                                         StringTooltip.ofString("forcewave", "Вызывает волну"),
                                         StringTooltip.ofString("forcestop", "Останавливает игру на арене"),
-                                        StringTooltip.ofString("printinfo", "Показывает информацию арены")
+                                        StringTooltip.ofString("printinfo", "Показывает информацию арены"),
+                                        StringTooltip.ofString("printwavesinfo", "Показывает информацию о волнах")
                                 }
                         )))
-                .withArguments(new IntegerArgument("arenaid")
+                .withOptionalArguments(new IntegerArgument("arenaid")
                         .replaceSuggestions(ArgumentSuggestions.strings(
                                 ArenasManager.getAllIDs()
                         )))
@@ -56,16 +58,28 @@ public class CommandsManager {
                 .withPermission(CommandPermission.OP)
                 .executes((sender, args) -> {
                     String action = (String) args.get("action");
-                    assert action != null;
-                    Arena arena = ArenasManager.getArenaByID((Integer) args.get("arenaid"));
-                    if (arena == null){
-                        sender.sendMessage(Component.text("Арена с таким ID не найдена!").color(NamedTextColor.RED));
-                        return;
-                    }
-
+                    if (action == null) return;
                     switch (action){
-                        case "forcestop" -> arena.forceStop();
+                        case "printwavesinfo" -> {
+                            for (AWave wave : WavesManager.getAllWaves()){
+                                sender.sendMessage(Component.text("Волна: " + wave.toString() + " - Вес: " + wave.getWeight()));
+                            }
+                        }
+
+                        case "forcestop" -> {
+                            Arena arena = ArenasManager.getArenaByID((Integer) args.get("arenaid"));
+                            if (arena == null){
+                                sender.sendMessage(Component.text("Арена с таким ID не найдена!").color(NamedTextColor.RED));
+                                return;
+                            }
+                            arena.forceStop();
+                        }
                         case "forcewave" -> {
+                            Arena arena = ArenasManager.getArenaByID((Integer) args.get("arenaid"));
+                            if (arena == null){
+                                sender.sendMessage(Component.text("Арена с таким ID не найдена!").color(NamedTextColor.RED));
+                                return;
+                            }
                             AWave wave = WavesManager.getWaveByName((String) args.get("waveName"));
                             if (wave == null){
                                 sender.sendMessage(Component.text("Волна с таким именем не найдена!").color(NamedTextColor.RED));
@@ -74,6 +88,11 @@ public class CommandsManager {
                             arena.forceStartWave(wave);
                         }
                         case "printinfo" -> {
+                            Arena arena = ArenasManager.getArenaByID((Integer) args.get("arenaid"));
+                            if (arena == null){
+                                sender.sendMessage(Component.text("Арена с таким ID не найдена!").color(NamedTextColor.RED));
+                                return;
+                            }
                             arena.debugValues((Player) sender);
                         }
                     }

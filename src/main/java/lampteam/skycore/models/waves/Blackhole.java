@@ -13,6 +13,7 @@ import java.util.Set;
 public class Blackhole extends AWave{
     Skycore plugin = Skycore.getPlugin();
 
+    private static int weight;
     private static double maxPower;
     private static double maxRadius;
 
@@ -27,6 +28,11 @@ public class Blackhole extends AWave{
     }
 
     private BukkitRunnable wave;
+
+    @Override
+    public int getWeight(){
+        return weight;
+    }
 
     @Override
     public void startWave(Arena arena) {

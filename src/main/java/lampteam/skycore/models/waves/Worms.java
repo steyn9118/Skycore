@@ -17,6 +17,7 @@ import java.util.Hashtable;
 public class Worms extends AWave{
     Skycore plugin = Skycore.getPlugin();
 
+    private static int weight;
     private static double speed; //Def: 0.05(blocks per tick)
     private static int edgeCubeLength;//Def: 9
 
@@ -30,6 +31,11 @@ public class Worms extends AWave{
         weight = weight1;
         speed = speed1;
         edgeCubeLength = edgeCubeLength1;
+    }
+
+    @Override
+    public int getWeight(){
+        return weight;
     }
 
     @Override

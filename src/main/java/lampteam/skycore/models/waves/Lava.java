@@ -65,9 +65,6 @@ public class Lava extends AWave {
                 try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
                     editSession.setMask(mask);
                     editSession.replaceBlocks(region, mask, pattern);
-
-
-
                 }
                 if (y >= arena.getBorders().getMinY() && y <= elevationPoint) y++;
                 else wave.cancel();

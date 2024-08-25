@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -66,6 +67,8 @@ public class PotionRain extends AWave {
                     ThrownPotion potion = (ThrownPotion) arena.getWorld().spawnEntity(location, EntityType.POTION);
                     potion.setItem(new ItemStack(Material.LINGERING_POTION));
                     PotionMeta potionMeta = potion.getPotionMeta().clone();
+                    //метадата
+                    potion.setMetadata("wave", new FixedMetadataValue(plugin,true));
                     int r = random.nextInt(1, 8);
                     switch (r) {
                         case 1 -> {

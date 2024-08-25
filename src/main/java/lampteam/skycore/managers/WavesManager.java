@@ -63,14 +63,14 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("lava");
         Lava.loadProperties(
-                wavesConfig.getOrSetDefault("weight", 1),
+                wavesConfig.getOrSetDefault("weight", 3),
                 wavesConfig.getOrSetDefault("lastElevationPoint", 43)
         );
         wavesDictionary.put("lava", new Lava());
 
         wavesConfig.setPathPrefix("blackHole");
         Blackhole.loadProperties(
-                wavesConfig.getOrSetDefault("weight", 3),
+                wavesConfig.getOrSetDefault("weight", 4),
                 wavesConfig.getOrSetDefault("maxPower", 1.0),
                 wavesConfig.getOrSetDefault("maxRadius", 52)
         );
@@ -78,7 +78,7 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("border");
         Border.loadProperties(
-                wavesConfig.getOrSetDefault("weight", 1),
+                wavesConfig.getOrSetDefault("weight", 3),
                 wavesConfig.getOrSetDefault("areaSize", 120.0)
         );
         wavesDictionary.put("border", new Border());

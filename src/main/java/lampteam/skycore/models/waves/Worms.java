@@ -8,11 +8,13 @@ import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Hashtable;
+import java.util.Random;
 
 public class Worms extends AWave{
     Skycore plugin = Skycore.getPlugin();
@@ -62,7 +64,7 @@ public class Worms extends AWave{
 
                     if (!arena.getPlayers().contains(PlayerModelsManager.getModelOfPlayer(player))){
                         sheep.remove();
-                        //можно ли изменять хешмапу во время итерации?
+
                         try {
                             wormsList.remove(sheep, player);
                         } catch (Exception e) {
@@ -71,33 +73,41 @@ public class Worms extends AWave{
                         continue;
                     }
 
-                    if (sheep.isSheared()){
-                        //звук
-                        arena.getWorld().playSound(sheepLocation, Sound.ENTITY_SHEEP_AMBIENT, SoundCategory.MASTER, 2, 0.1f);
-                        sheep.remove();
-                        try {
-                            wormsList.remove(sheep, player);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                    if (sheep.isSheared() && sheep.getMetadata("speed") == null){
+                        Random random = new Random();
+                        if (random.nextBoolean()) {
+                            sheep.setMetadata("speed", new FixedMetadataValue(plugin, true));
+                            //звук
+                            arena.getWorld().playSound(sheepLocation, Sound.ENTITY_SHEEP_AMBIENT, SoundCategory.MASTER, 2, 1.8f);
                         }
-                        //я не знаю как по другому сетать много блоков
-                        int halfLenght = (edgeCubeLength-1)/2;
-                        for (int x = -halfLenght; x < halfLenght; x++){
-                            for (int z = -halfLenght; z < halfLenght; z++){
-                                sheepLocation.clone().add(x, -halfLenght, z).getBlock().setType(Material.OBSIDIAN);
-                                sheepLocation.clone().add(x, halfLenght, z).getBlock().setType(Material.OBSIDIAN);
+                        else {
+                            //звук
+                            arena.getWorld().playSound(sheepLocation, Sound.ENTITY_SHEEP_AMBIENT, SoundCategory.MASTER, 2, 0.1f);
+                            sheep.remove();
+                            try {
+                                wormsList.remove(sheep, player);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
                             }
-                        }
-                        for (int x = -halfLenght; x < halfLenght; x++){
-                            for (int y = -halfLenght; y < halfLenght; y++){
-                                sheepLocation.clone().add(x, y, halfLenght).getBlock().setType(Material.OBSIDIAN);
-                                sheepLocation.clone().add(x, y, -halfLenght).getBlock().setType(Material.OBSIDIAN);
+                            //я не знаю как по другому сетать много блоков
+                            int halfLenght = (edgeCubeLength - 1) / 2;
+                            for (int x = -halfLenght; x < halfLenght; x++) {
+                                for (int z = -halfLenght; z < halfLenght; z++) {
+                                    sheepLocation.clone().add(x, -halfLenght, z).getBlock().setType(Material.OBSIDIAN);
+                                    sheepLocation.clone().add(x, halfLenght, z).getBlock().setType(Material.OBSIDIAN);
+                                }
                             }
-                        }
-                        for (int y = -halfLenght; y < halfLenght; y++){
-                            for (int z = -halfLenght; z < halfLenght; z++){
-                                sheepLocation.clone().add(halfLenght, y, z).getBlock().setType(Material.OBSIDIAN);
-                                sheepLocation.clone().add(-halfLenght, y, z).getBlock().setType(Material.OBSIDIAN);
+                            for (int x = -halfLenght; x < halfLenght; x++) {
+                                for (int y = -halfLenght; y < halfLenght; y++) {
+                                    sheepLocation.clone().add(x, y, halfLenght).getBlock().setType(Material.OBSIDIAN);
+                                    sheepLocation.clone().add(x, y, -halfLenght).getBlock().setType(Material.OBSIDIAN);
+                                }
+                            }
+                            for (int y = -halfLenght; y < halfLenght; y++) {
+                                for (int z = -halfLenght; z < halfLenght; z++) {
+                                    sheepLocation.clone().add(halfLenght, y, z).getBlock().setType(Material.OBSIDIAN);
+                                    sheepLocation.clone().add(-halfLenght, y, z).getBlock().setType(Material.OBSIDIAN);
+                                }
                             }
                         }
                     }
@@ -107,7 +117,8 @@ public class Worms extends AWave{
                     sheep.getLocation().setDirection(step);
                     sheep.teleport(sheep.getLocation().setDirection(step));
                     //движение вперед
-                    sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
+                    if (sheep.getMetadata("speed") == null) sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
+                    else sheep.teleport(sheep.getLocation().add(step.multiply(speed*2)));
 
                     if (timer % 10 == 0 && !sheepLocation.getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){
                         sheep.getLocation().getBlock().setType(Material.OBSIDIAN);

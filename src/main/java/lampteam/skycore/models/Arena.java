@@ -1,5 +1,16 @@
 package lampteam.skycore.models;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import lampteam.skycore.Skycore;
 import lampteam.skycore.Utils;
 import lampteam.skycore.managers.WavesManager;
@@ -14,12 +25,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class Arena {
     private final int id;
     private final int wavesInterval; // Секунды
     private final String name;
+    private final String arenaSchemName;
     private final Arena arena;
     private final World world;
     private final Location lobbyLocation;
@@ -93,7 +108,9 @@ public class Arena {
             Location centerCore,
             BoundingBox borders,
             Location hubLocation,
-            int lobbyTimerDuration, int minPlayers
+            int lobbyTimerDuration,
+            int minPlayers,
+            String arenaSchemName
     ){
         arena = this;
 
@@ -109,6 +126,7 @@ public class Arena {
         this.hubLocation = hubLocation;
         this.lobbyTimerDuration = lobbyTimerDuration;
         this.minPlayers = minPlayers;
+        this.arenaSchemName = arenaSchemName;
 
         wavesCollection = WavesManager.getAllWaves();
 
@@ -270,7 +288,30 @@ public class Arena {
                     for (AWave wave : activeWaves) wave.stopWave();
                     activeWaves.clear();
 
-                    // TODO ресет карты
+                    // ресет карты
+                    BukkitRunnable mapReset = new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Clipboard clipboard;
+                            File file = new File(plugin.getDataFolder().getPath() + "/Schematics/" + arenaSchemName);
+
+                            ClipboardFormat format = ClipboardFormats.findByFile(file);
+                            assert format != null;
+                            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                                clipboard = reader.read();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try (EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world))) {
+                                Operation operation = new ClipboardHolder(clipboard)
+                                        .createPaste(editSession)
+                                        .to(BlockVector3.at(centerCore.getBlockX(), centerCore.getBlockY(), centerCore.getBlockZ()))
+                                        .build();
+                                Operations.complete(operation);
+                            }
+                        }
+                    };
+                    mapReset.runTaskAsynchronously(plugin);
 
                     gameActive = false;
                     lobbyTimerActive = false;
@@ -307,6 +348,7 @@ public class Arena {
     }
 
     private void startNewWave(){
+        if (wavesQueue.isEmpty()) endGame(false);
         AWave currentWave = wavesQueue.getFirst();
         wavesQueue.removeFirst();
         activeWaves.add(currentWave);

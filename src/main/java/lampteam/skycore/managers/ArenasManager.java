@@ -50,6 +50,7 @@ public class ArenasManager {
             Location hubLocation = Utils.Converter.LocFromStr(config.getOrSetDefault("hubLocation", Utils.Converter.LocToStr(defLocation, true)));
             int minPlayers = config.getOrSetDefault("minPlayers", 2);
             int lobbyTime = config.getOrSetDefault("lobbyTimerDuration", 60);
+            String arenaSchemName = config.getOrSetDefault("arenaSchemName", "arena.schem");
 
             arenas.add(new Arena(
                     id,
@@ -63,7 +64,8 @@ public class ArenasManager {
                     borders,
                     hubLocation,
                     lobbyTime,
-                    minPlayers));
+                    minPlayers,
+                    arenaSchemName));
         }
     }
 

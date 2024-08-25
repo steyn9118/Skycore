@@ -1,8 +1,6 @@
 package lampteam.skycore.models.waves;
 
-import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class Border extends AWave {
 

@@ -57,7 +57,7 @@ public class WavesManager {
         wavesConfig.setPathPrefix("smallBeams");
         SmallBeams.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 2),
-                wavesConfig.getOrSetDefault("totalCount", 360)
+                wavesConfig.getOrSetDefault("totalCount", 320)
         );
         wavesDictionary.put("smallBeams", new SmallBeams());
 

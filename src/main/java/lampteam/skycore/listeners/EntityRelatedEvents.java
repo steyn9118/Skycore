@@ -19,6 +19,7 @@ public class EntityRelatedEvents implements Listener {
     public void onPotionHit(PotionSplashEvent e){
         if (e.getPotion().getItem().getType().equals(Material.LINGERING_POTION)){
 
+
             Location location = e.getPotion().getLocation();
             World world = location.getWorld();
             int x = (int) location.getX();

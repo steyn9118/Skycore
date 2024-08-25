@@ -17,8 +17,8 @@ public class StormWind extends AWave{
 
     private static int weight;
     private static int changeCount;//Def: 2
-    private static double mainPower;//Def: 0.5
-    private static double passivePower;//Def: 0.3
+    private static double mainPower;//Def: 0.05
+    private static double passivePower;//Def: 0.03
 
     private BukkitRunnable wave;
 
@@ -47,7 +47,7 @@ public class StormWind extends AWave{
 
             @Override
             public void run() {
-                timer+=2;
+                timer++;
 
                 list.addAll(center.getNearbyEntitiesByType(LivingEntity.class, arena.getBorders().getWidthX()+2));
                 list.addAll(center.getNearbyEntitiesByType(Projectile.class, arena.getBorders().getWidthX()+2));
@@ -68,7 +68,7 @@ public class StormWind extends AWave{
                 }
             }
         };
-        wave.runTaskTimer(plugin, 0, 2);
+        wave.runTaskTimer(plugin, 0, 1);
     }
 
     @Override

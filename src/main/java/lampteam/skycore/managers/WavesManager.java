@@ -40,9 +40,7 @@ public class WavesManager {
         PotionRain.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 1),
                 wavesConfig.getOrSetDefault("totalCount", 240),
-                wavesConfig.getOrSetDefault("maxSpreadRadius", 5),
-                wavesConfig.getOrSetDefault("areaSize", 2.5),
-                wavesConfig.getOrSetDefault("areaDuration", 10)
+                wavesConfig.getOrSetDefault("maxSpreadRadius", 5)
         );
         wavesDictionary.put("potionRain", new PotionRain());
 
@@ -87,7 +85,7 @@ public class WavesManager {
         StormWind.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 2),
                 wavesConfig.getOrSetDefault("changeCount", 4),
-                wavesConfig.getOrSetDefault("mainPower", 0.5)
+                wavesConfig.getOrSetDefault("mainPower", 0.4)
         );
         wavesDictionary.put("stormWind", new StormWind());
         // TODO все новые волны

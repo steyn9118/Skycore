@@ -33,14 +33,11 @@ public class SmallBeams extends AWave {
         Random random = new Random();
 
         wave = new BukkitRunnable() {
-            int counter = 0;
             int x;
             int z;
             boolean onlyAir;
             @Override
             public void run() {
-                if (counter >= totalCount) wave.cancel();
-                counter++;
 
                 do {
                     onlyAir = true;

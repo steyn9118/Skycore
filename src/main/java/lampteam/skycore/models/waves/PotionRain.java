@@ -23,23 +23,17 @@ public class PotionRain extends AWave {
     private static int weight;
     private static int totalCount;//Def: 120
     private static int maxSpreadRadius;//Def: 8
-    private static double areaSize;//Def: 3
-    private static int areaDuration;//Def: 5*20
 
     private BukkitRunnable wave;
 
     public static void loadProperties(
             int weight1,
             int totalCount1,
-            int maxSpreadRadius1,
-            double areaSize1,
-            int areaDuration1
+            int maxSpreadRadius1
     ){
         weight = weight1;
         totalCount = totalCount1;
-        maxSpreadRadius = maxSpreadRadius1;
-        areaSize = areaSize1;
-        areaDuration = areaDuration1;
+        maxSpreadRadius = maxSpreadRadius1;;
     }
 
     @Override
@@ -52,13 +46,10 @@ public class PotionRain extends AWave {
         Random random = new Random();
 
         wave = new BukkitRunnable() {
-            int counter = 0;
             double x;
             double z;
             @Override
             public void run() {
-                if (counter >= totalCount) wave.cancel();
-                counter++;
 
                 for (PlayerModel model : arena.getPlayers()) {
                     x = random.nextDouble(-maxSpreadRadius, maxSpreadRadius);

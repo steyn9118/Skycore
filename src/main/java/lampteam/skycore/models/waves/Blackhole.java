@@ -48,7 +48,7 @@ public class Blackhole extends AWave{
                 //частицы
                 Bukkit.getWorld("world").spawnParticle(Particle.PORTAL, center, 400, 0, 0, 0, 8,null, true);
                 //звук
-                arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 6*(timer /(float) (arena.getWavesInterval()*20)), 0.1f);
+                arena.getWorld().playSound(center, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 3*(timer /(float) (arena.getWavesInterval()*20)), 0.1f);
 
                 list.addAll(center.getNearbyEntitiesByType(LivingEntity.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));
                 list.addAll(center.getNearbyEntitiesByType(Projectile.class, maxRadius*((double) timer / (arena.getWavesInterval()*20))));

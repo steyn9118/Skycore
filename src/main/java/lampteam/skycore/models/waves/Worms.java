@@ -113,15 +113,15 @@ public class Worms extends AWave{
                     }
 
                     //поворот
-                    Vector step = player.getEyeLocation().add(0,-1,0) .subtract(sheep.getLocation()).toVector().normalize();
+                    Vector step = player.getEyeLocation().add(0,-0.8,0) .subtract(sheep.getLocation()).toVector().normalize();
                     Vector eyes = player.getEyeLocation().subtract(sheep.getLocation()).toVector().add(new Vector(0,-1.6, 0));
                     sheep.teleport(sheep.getLocation().setDirection(eyes.clone()));
                     //движение вперед
                     if (sheep.getColor().equals(DyeColor.BLACK)) sheep.teleport(sheep.getLocation().add(step.multiply(speed)));
                     else sheep.teleport(sheep.getLocation().add(step.multiply(speed*1.8)));
 
-                    if (timer % 5 == 0 && !sheepLocation.add(0,1,0).getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){
-                        sheep.getLocation().add(0, 1, 0) .getBlock().setType(Material.OBSIDIAN);
+                    if (timer % 5 == 0 && !sheepLocation.add(0,0.8,0).getBlock().getBlockData().getMaterial().equals(Material.BEDROCK)){
+                        sheep.getLocation().add(0, 0.8, 0) .getBlock().setType(Material.OBSIDIAN);
                     }
                 }
                 timer++;

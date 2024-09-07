@@ -69,15 +69,18 @@ public class WavesManager {
         wavesConfig.setPathPrefix("blackHole");
         Blackhole.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 4),
-                wavesConfig.getOrSetDefault("maxPower", 1.0),
-                wavesConfig.getOrSetDefault("maxRadius", 52)
+                wavesConfig.getOrSetDefault("radius", 15.0),
+                wavesConfig.getOrSetDefault("xBound", 80),
+                wavesConfig.getOrSetDefault("yUpBound", 55),
+                wavesConfig.getOrSetDefault("yDownBound", 25)
         );
         wavesDictionary.put("blackHole", new Blackhole());
 
         wavesConfig.setPathPrefix("border");
         Border.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 3),
-                wavesConfig.getOrSetDefault("areaSize", 120.0)
+                wavesConfig.getOrSetDefault("areaSize", 101.0),
+                wavesConfig.getOrSetDefault("maxCenterSpread", 85)
         );
         wavesDictionary.put("border", new Border());
 

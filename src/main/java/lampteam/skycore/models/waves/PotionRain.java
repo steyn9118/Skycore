@@ -71,12 +71,12 @@ public class PotionRain extends AWave {
                             potion.setPotionMeta(potionMeta);
                         }
                         case 3 -> {
-                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20 * 10, 2, false, true, true), true);
+                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20 * 15, 2, false, true, true), true);
                             potionMeta.setColor(Color.GRAY);
                             potion.setPotionMeta(potionMeta);
                         }
                         case 4 -> {
-                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 10, 0, false, true, true), true);
+                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 15, 0, false, true, true), true);
                             potionMeta.setColor(Color.WHITE);
                             potion.setPotionMeta(potionMeta);;
                         }
@@ -86,12 +86,12 @@ public class PotionRain extends AWave {
                             potion.setPotionMeta(potionMeta);
                         }
                         case 6 -> {
-                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * 10, 1, false, true, true), true);
+                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * 20, 1, false, true, true), true);
                             potionMeta.setColor(Color.AQUA);
                             potion.setPotionMeta(potionMeta);
                         }
                         case 7 -> {
-                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20 * 10, 1, false, true, true), true);
+                            potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20 * 20, 1, false, true, true), true);
                             potionMeta.setColor(Color.NAVY);
                             potion.setPotionMeta(potionMeta);
                         }

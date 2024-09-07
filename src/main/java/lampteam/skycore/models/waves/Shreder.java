@@ -38,15 +38,17 @@ public class Shreder extends AWave{
 
             @Override
             public void run() {
-                for (int x = (int) arena.getBorders().getMinX(); x < arena.getBorders().getMaxX(); x++){
-                    for (int z = (int) arena.getBorders().getMinZ(); z < arena.getBorders().getMaxZ(); z++){
-                        //частицы
-                        arena.getWorld().spawnParticle(Particle.CRIT, x+0.5, y, z+0.5, 1, 0, 0, 0, 0, null, false);
+                if (timer % 2 == 0) {
+                    for (int x = (int) arena.getBorders().getMinX(); x < arena.getBorders().getMaxX(); x++) {
+                        for (int z = (int) arena.getBorders().getMinZ(); z < arena.getBorders().getMaxZ(); z++) {
+                            //частицы
+                            arena.getWorld().spawnParticle(Particle.CRIT, x + 0.5, y, z + 0.5, 1, 0, 0, 0, 0, null, false);
 
-                        //удаление
-                        if (timer % period == 0){
-                            if (!arena.getWorld().getBlockAt(x, (int) y, z).getType().equals(Material.BEDROCK)) {
-                                arena.getWorld().getBlockAt(x, (int) y, z).setType(Material.AIR);
+                            //удаление
+                            if (timer % period == 0) {
+                                if (!arena.getWorld().getBlockAt(x, (int) y, z).getType().equals(Material.BEDROCK)) {
+                                    arena.getWorld().getBlockAt(x, (int) y, z).setType(Material.AIR);
+                                }
                             }
                         }
                     }

@@ -41,10 +41,10 @@ public class Border extends AWave {
         do {
             x = random.nextInt(-maxCenterSpread, maxCenterSpread);
             z = random.nextInt(-maxCenterSpread, maxCenterSpread);
-            location = new Location(arena.getWorld(), x, arena.getCenterCore().getY(), z);
+            location = new Location(arena.getWorld(), x+0.5, arena.getCenterCore().getY(), z+0.5);
         }while (location.subtract(arena.getCenterCore()).toVector().length() >= maxCenterSpread);
 
-        arena.getWorld().getWorldBorder().setSize(areaSize*1.5, 0);
+        arena.getWorld().getWorldBorder().setSize(arena.getBorders().getWidthX()*1.5, 0);
         arena.getWorld().getWorldBorder().setCenter(location);
         arena.getWorld().getWorldBorder().setSize(areaSize, arena.getWavesInterval());
     }

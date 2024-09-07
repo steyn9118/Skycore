@@ -24,7 +24,7 @@ public class Lava extends AWave {
     Skycore plugin = Skycore.getPlugin();
 
     private static int weight;
-    private static double elevationPoint;
+    private static int elevationPoint;
 
     private BukkitRunnable wave;
 

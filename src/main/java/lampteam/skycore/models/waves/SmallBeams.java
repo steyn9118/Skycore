@@ -3,6 +3,7 @@ package lampteam.skycore.models.waves;
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
 import org.bukkit.*;
+import org.bukkit.block.data.type.Chest;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;

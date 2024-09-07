@@ -67,7 +67,7 @@ public class Blackhole extends AWave{
                 //частицы
                 arena.getWorld().spawnParticle(Particle.PORTAL, location, 200, 0, 0, 0, 8,null, true);
                 //звук
-                arena.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 3, 0.1f);
+                arena.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.MASTER, 2, 0.1f);
 
                 list.addAll(location.getNearbyEntitiesByType(LivingEntity.class, radius));
                 list.addAll(location.getNearbyEntitiesByType(Projectile.class, radius));
@@ -78,8 +78,8 @@ public class Blackhole extends AWave{
                     if (entity.getLocation().subtract(location).toVector().length() > radius) continue;
                     double distance = entity.getLocation().distance(location);
                     Vector v = location.clone().toVector().subtract(entity.getLocation().clone().toVector()).normalize();
-                    if (distance < 3) entity.setVelocity(v.clone().multiply(Math.pow(distance / 3, 2)));
-                    else entity.setVelocity(entity.getVelocity().add(v.clone().multiply(1 / distance)));
+                    if (distance < 2) entity.setVelocity(v.clone().multiply(Math.pow(distance / 2, 2)));
+                    else entity.setVelocity(entity.getVelocity().add(v.clone().multiply(2 / distance)));
 
                 }
                 list.clear();

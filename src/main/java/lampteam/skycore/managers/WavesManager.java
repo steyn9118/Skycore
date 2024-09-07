@@ -69,7 +69,7 @@ public class WavesManager {
         wavesConfig.setPathPrefix("blackHole");
         Blackhole.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 4),
-                wavesConfig.getOrSetDefault("radius", 15.0),
+                wavesConfig.getOrSetDefault("radius", 30.0),
                 wavesConfig.getOrSetDefault("xBound", 80),
                 wavesConfig.getOrSetDefault("yUpBound", 55),
                 wavesConfig.getOrSetDefault("yDownBound", 25)
@@ -86,11 +86,18 @@ public class WavesManager {
 
         wavesConfig.setPathPrefix("stormWind");
         StormWind.loadProperties(
-                wavesConfig.getOrSetDefault("weight", 2),
+                wavesConfig.getOrSetDefault("weight", 3),
                 wavesConfig.getOrSetDefault("changeCount", 4),
                 wavesConfig.getOrSetDefault("mainPower", 0.4)
         );
         wavesDictionary.put("stormWind", new StormWind());
+
+        wavesConfig.setPathPrefix("shreder");
+        Shreder.loadProperties(
+                wavesConfig.getOrSetDefault("weight", 4),
+                wavesConfig.getOrSetDefault("lastElevationPoint", 38)
+        );
+        wavesDictionary.put("shreder", new Shreder());
         // TODO все новые волны
     }
 

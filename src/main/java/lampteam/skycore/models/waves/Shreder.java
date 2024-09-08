@@ -2,7 +2,6 @@ package lampteam.skycore.models.waves;
 
 import lampteam.skycore.Skycore;
 import lampteam.skycore.models.Arena;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -67,6 +66,6 @@ public class Shreder extends AWave{
 
     @Override
     public void stopWave() {
-
+        wave.cancel();
     }
 }

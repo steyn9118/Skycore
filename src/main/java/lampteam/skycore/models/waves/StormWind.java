@@ -32,6 +32,11 @@ public class StormWind extends AWave{
     }
 
     @Override
+    public int getWeight(){
+        return weight;
+    }
+
+    @Override
     public void startWave(Arena arena) {
         Set<Entity> list = new HashSet<>();
         Location center = arena.getCenterCore();

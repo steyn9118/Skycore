@@ -68,7 +68,7 @@ public class Lava extends AWave {
                         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
                             //editSession.setMask(mask);
                             editSession.replaceBlocks(region, mask, pattern);
-                        }
+                        } catch (Exception ignored){}
                     }
                 };
                 lavaSet.runTaskAsynchronously(plugin);

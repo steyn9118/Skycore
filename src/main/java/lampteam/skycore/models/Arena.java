@@ -34,7 +34,7 @@ public class Arena {
     private final int id;
     private final int wavesInterval; // Секунды
     private final String name;
-    private final String arenaSchemName;
+    private final String arenaSchematicName;
     private final Arena arena;
     private final World world;
     private final Location lobbyLocation;
@@ -50,7 +50,7 @@ public class Arena {
     private boolean lobbyTimerActive = false;
 
     private final Skycore plugin = Skycore.getPlugin();
-    private final BossBar wavesTimerBar = BossBar.bossBar(Component.text("00:00"), 0f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_20);
+    private final BossBar wavesTimerBar = BossBar.bossBar(Component.text("00:00"), 0f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_6);
     private final BossBar lobbyTimerBar = BossBar.bossBar(Component.text("Ожидаем игроков..."), 1f, BossBar.Color.GREEN, BossBar.Overlay.PROGRESS);
 
     private final List<PlayerModel> members = new ArrayList<>();
@@ -110,7 +110,7 @@ public class Arena {
             Location hubLocation,
             int lobbyTimerDuration,
             int minPlayers,
-            String arenaSchemName
+            String arenaSchematicName
     ){
         arena = this;
 
@@ -126,7 +126,7 @@ public class Arena {
         this.hubLocation = hubLocation;
         this.lobbyTimerDuration = lobbyTimerDuration;
         this.minPlayers = minPlayers;
-        this.arenaSchemName = arenaSchemName;
+        this.arenaSchematicName = arenaSchematicName;
 
         wavesCollection = WavesManager.getAllWaves();
 
@@ -176,7 +176,7 @@ public class Arena {
             @Override
             public void run() {
                 if (players.isEmpty()){
-                    endGame(false);
+                    endGame(10);
                     this.cancel();
                 }
 
@@ -233,109 +233,70 @@ public class Arena {
         }
     }
 
-    private void endGame(boolean instant){
-        if (instant){
-            try {
-                mainTimer.cancel();
-                waveTimer.cancel();
-                lobbyTimer.cancel();
-            } catch (IllegalStateException e){
-                // МНЕ ПОХУУЙ
-            }
+    private void endGame(int delaySeconds){
+        try {
+            mainTimer.cancel();
+            waveTimer.cancel();
+            lobbyTimer.cancel();
+        } catch (IllegalStateException ignored){}
 
-            for (PlayerModel model : spectators){
-                Player player = model.getPlayer();
-                clearPlayer(model);
+        for (AWave wave : activeWaves) wave.stopWave();
+        activeWaves.clear();
 
-                player.hideBossBar(lobbyTimerBar);
-                player.hideBossBar(wavesTimerBar);
-                player.teleport(hubLocation);
-                player.sendMessage(Component.text("Вы покинули арену"));
-            }
+        BukkitRunnable delayedEndGame = new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (PlayerModel model : spectators){
+                    Player player = model.getPlayer();
+                    clearPlayer(model);
 
-            players.clear();
-            spectators.clear();
-            members.clear();
-
-            for (AWave wave : activeWaves) wave.stopWave();
-            activeWaves.clear();
-
-            // TODO ресет карты
-
-            gameActive = false;
-            lobbyTimerActive = false;
-            resetLobbyTimerDisplay();
-            createWavesQueue();
-            Collections.shuffle(playerSpawnLocations);
-        }
-        else {
-            BukkitRunnable delayedEndGame = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try {
-                        mainTimer.cancel();
-                        waveTimer.cancel();
-                        lobbyTimer.cancel();
-                    } catch (IllegalStateException e){
-                        // МНЕ ПОХУУЙ
-                    }
-
-                    for (PlayerModel model : spectators){
-                        Player player = model.getPlayer();
-                        clearPlayer(model);
-
-                        player.hideBossBar(lobbyTimerBar);
-                        player.hideBossBar(wavesTimerBar);
-                        player.teleport(hubLocation);
-                        player.sendMessage(Component.text("Вы покинули арену"));
-                    }
-
-                    players.clear();
-                    spectators.clear();
-                    members.clear();
-
-                    for (AWave wave : activeWaves) wave.stopWave();
-                    activeWaves.clear();
-
-                    // ресет карты
-                    BukkitRunnable mapReset = new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            Clipboard clipboard;
-                            File file = new File(plugin.getDataFolder().getPath() + "/Schematics/" + arenaSchemName);
-
-                            ClipboardFormat format = ClipboardFormats.findByFile(file);
-                            assert format != null;
-                            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                                clipboard = reader.read();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                            try (EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world))) {
-                                Operation operation = new ClipboardHolder(clipboard)
-                                        .createPaste(editSession)
-                                        .to(BlockVector3.at(centerCore.getBlockX(), centerCore.getBlockY(), centerCore.getBlockZ()))
-                                        .build();
-                                Operations.complete(operation);
-                            }
-                        }
-                    };
-                    mapReset.runTaskAsynchronously(plugin);
-
-                    gameActive = false;
-                    lobbyTimerActive = false;
-                    resetLobbyTimerDisplay();
-                    createWavesQueue();
-                    Collections.shuffle(playerSpawnLocations);
+                    player.hideBossBar(lobbyTimerBar);
+                    player.hideBossBar(wavesTimerBar);
+                    player.teleport(hubLocation);
+                    player.sendMessage(Component.text("Вы покинули арену"));
                 }
-            };
-            delayedEndGame.runTaskLater(plugin, 10*20);
-        }
 
+                players.clear();
+                spectators.clear();
+                members.clear();
+
+                // ресет карты
+                BukkitRunnable mapReset = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Clipboard clipboard;
+                        File file = new File(plugin.getDataFolder().getPath() + "/Schematics/" + arenaSchematicName);
+
+                        ClipboardFormat format = ClipboardFormats.findByFile(file);
+                        assert format != null;
+                        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                            clipboard = reader.read();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try (EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world))) {
+                            Operation operation = new ClipboardHolder(clipboard)
+                                    .createPaste(editSession)
+                                    .to(BlockVector3.at(centerCore.getBlockX(), centerCore.getBlockY(), centerCore.getBlockZ()))
+                                    .build();
+                            Operations.complete(operation);
+                        }
+                    }
+                };
+                mapReset.runTaskAsynchronously(plugin);
+
+                lobbyTimerActive = false;
+                resetLobbyTimerDisplay();
+                createWavesQueue();
+                Collections.shuffle(playerSpawnLocations);
+                gameActive = false;
+            }
+        };
+        delayedEndGame.runTaskLater(plugin, delaySeconds * 20L);
     }
 
     public void forceStop(){
-        if (members.isEmpty()) return;
+        if (!gameActive) return;
         // всё то же что и в tryLeavePlayer но без удаления из списков
         for (PlayerModel model : members){
             Player player = model.getPlayer();
@@ -353,7 +314,8 @@ public class Arena {
             player.sendMessage(Component.text("Игра была остановлена"));
         }
 
-        endGame(true);
+        endGame(0);
+        plugin.getLogger().info("Остановка арены " + arena.id);
     }
 
     private void startNewWave(){
@@ -373,6 +335,7 @@ public class Arena {
 
     public void forceStartWave(AWave wave){
         wave.startWave(this);
+        activeWaves.add(wave);
         plugin.getLogger().info("Волна была вызвана на арене " + arena.id);
     }
 
@@ -454,7 +417,6 @@ public class Arena {
 
         players.remove(model);
         joinAsSpectator(model, true);
-        // TODO тп на место смерти
     }
 
     public void spectatePlayer(PlayerModel model, LinearDirection direction){
@@ -473,7 +435,9 @@ public class Arena {
         Player player = model.getPlayer();
         player.setGameMode(GameMode.ADVENTURE);
         player.getInventory().clear();
-        player.getActivePotionEffects().clear();
+        player.clearActivePotionEffects();
+        player.setLevel(0);
+        player.setExp(0f);
         player.hideBossBar(lobbyTimerBar);
         player.hideBossBar(wavesTimerBar);
 

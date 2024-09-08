@@ -25,6 +25,7 @@ public class WavesManager {
 
     public static void loadWavesFromConfig(){
         Yaml wavesConfig = ConfigsManager.getWavesConfig();
+        wavesDictionary.clear();
 
         wavesConfig.setPathPrefix("creeperRain");
         CreepRain.loadProperties(

@@ -39,13 +39,7 @@ public class ConfigsManager {
     }
 
     public static void loadWavesConfig(){
-        if (wavesConfig != null){
-            wavesConfig.forceReload();
-            return;
-        }
-
         wavesConfig = new Yaml("waves.yml", plugin.getDataFolder().getPath());
-        wavesConfig.write();
     }
 
     public static Yaml getWavesConfig(){
@@ -53,13 +47,7 @@ public class ConfigsManager {
     }
 
     public static void loadPluginConfig(){
-        if (pluginConfig != null){
-            pluginConfig.forceReload();
-            return;
-        }
-
         pluginConfig = new Yaml("config.yml", plugin.getDataFolder().getPath());
-        pluginConfig.write();
     }
 
     public static Yaml getPluginConfig(){

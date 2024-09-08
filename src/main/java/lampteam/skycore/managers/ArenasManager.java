@@ -30,11 +30,14 @@ public class ArenasManager {
 
     public static void loadArenasFromConfig() throws Exception {
         lastArenaID = ConfigsManager.getPluginConfig().getOrSetDefault("lastArenaID", 0);
+        arenas.clear();
 
         Location defLocation = new Location(Bukkit.getWorld("world"), 0,0,0);
 
         for (Yaml config : ConfigsManager.getArenasConfigs()){
-            int id = config.getOrSetDefault("id", generateArenaID());
+            int id = config.getInt("id");
+            if (id == 0) id = generateArenaID();
+
             int wavesInterval = config.getOrSetDefault("wavesInterval", 120);
             String name = config.getOrSetDefault("name", "none");
             World world = Bukkit.getWorld(config.getOrSetDefault("worldName", "world"));

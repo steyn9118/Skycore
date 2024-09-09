@@ -89,7 +89,7 @@ public class WavesManager {
         StormWind.loadProperties(
                 wavesConfig.getOrSetDefault("weight", 3),
                 wavesConfig.getOrSetDefault("changeCount", 4),
-                wavesConfig.getOrSetDefault("mainPower", 0.4)
+                wavesConfig.getOrSetDefault("mainPower", 0.04)
         );
         wavesDictionary.put("stormWind", new StormWind());
 

@@ -47,7 +47,6 @@ public class Arena {
     private final int minPlayers;
 
     private boolean gameActive = false;
-    private boolean lobbyTimerActive = false;
 
     private final Skycore plugin = Skycore.getPlugin();
     private final BossBar wavesTimerBar = BossBar.bossBar(Component.text("00:00"), 0f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_6);
@@ -61,9 +60,9 @@ public class Arena {
     private final List<AWave> wavesQueue = new ArrayList<>();
     private final List<AWave> activeWaves = new ArrayList<>();
 
-    private BukkitRunnable waveTimer;
-    private BukkitRunnable mainTimer;
-    private BukkitRunnable lobbyTimer;
+    private BetterRunnable waveTimer;
+    private BetterRunnable mainTimer;
+    private BetterRunnable lobbyTimer;
 
     private final Random random = new Random();
 
@@ -134,7 +133,7 @@ public class Arena {
     }
 
     private void initWavesTimer(){
-        waveTimer = new BukkitRunnable() {
+        waveTimer = new BetterRunnable() {
             @Override
             public void run() {
                 startNewWave();
@@ -143,13 +142,12 @@ public class Arena {
     }
 
     private void initLobbyTimer(){
-        lobbyTimer = new BukkitRunnable() {
+        lobbyTimer = new BetterRunnable() {
             int counter = lobbyTimerDuration;
             @Override
             public void run() {
                 if (players.size() < minPlayers) {
                     this.cancel();
-                    lobbyTimerActive = false;
                     resetLobbyTimerDisplay();
                     return;
                 }
@@ -157,7 +155,6 @@ public class Arena {
                 if (counter == 0) {
                     this.cancel();
                     startGame();
-                    lobbyTimerActive = false;
                     resetLobbyTimerDisplay();
                     return;
                 }
@@ -169,7 +166,7 @@ public class Arena {
     }
 
     private void initMainTimer(){
-        mainTimer = new BukkitRunnable() {
+        mainTimer = new BetterRunnable() {
 
             int time = 0;
 
@@ -234,11 +231,10 @@ public class Arena {
     }
 
     private void endGame(int delaySeconds){
-        try {
-            mainTimer.cancel();
-            waveTimer.cancel();
-            lobbyTimer.cancel();
-        } catch (IllegalStateException ignored){}
+
+        mainTimer.cancel();
+        waveTimer.cancel();
+        lobbyTimer.cancel();
 
         for (AWave wave : activeWaves) wave.stopWave();
         activeWaves.clear();
@@ -285,7 +281,6 @@ public class Arena {
                 };
                 mapReset.runTaskAsynchronously(plugin);
 
-                lobbyTimerActive = false;
                 resetLobbyTimerDisplay();
                 createWavesQueue();
                 Collections.shuffle(playerSpawnLocations);
@@ -475,16 +470,15 @@ public class Arena {
     }
 
     private void tryStartLobbyTimer(){
-        if (!lobbyTimerActive && players.size() >= minPlayers) {
+        if (!lobbyTimer.isRunning() && players.size() >= minPlayers) {
             initLobbyTimer();
             lobbyTimer.runTaskTimer(plugin, 0, 20);
-            lobbyTimerActive = true;
         }
     }
 
     public void debugValues(Player player){
         player.sendMessage("GameActive " + gameActive);
-        player.sendMessage("LobbyTimerActive " + lobbyTimerActive);
+        player.sendMessage("LobbyTimerActive " + lobbyTimer.isRunning());
         player.sendMessage("Members " + Arrays.toString(members.toArray()));
         player.sendMessage("Players " + Arrays.toString(players.toArray()));
         player.sendMessage("Spectators " + Arrays.toString(spectators.toArray()));

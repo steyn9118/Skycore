@@ -65,6 +65,6 @@ public class Shreder extends AWave{
 
     @Override
     public void stopWave() {
-
+        wave.cancel();
     }
 }
